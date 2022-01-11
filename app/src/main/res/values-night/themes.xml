@@ -15,5 +15,6 @@
         <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">shortEdges</item>
         <!-- Customize your theme here. -->
         <item name="textPrimary">@color/white</item>
+        <item name="cardColorBase">@color/cardview_dark_background</item>
     </style>
 </resources>
