@@ -19,49 +19,49 @@ import java.util.concurrent.TimeUnit
 interface MovieAPIs {
 
     @GET("movie/popular")
-    fun getPopularMovie(
+    suspend fun getPopularMovie(
         @Query("api_key") api_key: String,
         @Query("page") page: Int,
     ): Response<MovieResponse>
 
     @GET("movie/top_rated")
-    fun getTopRatedMovie(
+    suspend fun getTopRatedMovie(
         @Query("api_key") api_key: String,
         @Query("page") page: Int,
     ): Response<MovieResponse>
 
     @GET("movie/upcoming")
-    fun getUpcomingMovie(
+    suspend fun getUpcomingMovie(
         @Query("api_key") api_key: String,
         @Query("page") page: Int,
     ): Response<MovieResponse>
 
     @GET("genre/movie/list")
-    fun getGenreMovie(
+    suspend fun getGenreMovie(
         @Query("api_key") api_key: String,
     ): Response<GenreResponse>
 
     @GET("discover/movie")
-    fun getMovieByGenre(
+    suspend fun getMovieByGenre(
         @Query("api_key") api_key: String,
         @Query("page") page: Int,
         @Query("with_genres") genre_id: String,
     ): Response<MovieResponse>
 
     @GET("movie/{movie_id}")
-    fun getDetailMovie(
+    suspend fun getMovieDetail(
         @Path("movie_id") movie_id: String,
         @Query("api_key") api_key: String,
     ): Response<MovieDetail>
 
     @GET("movie/{movie_id}/videos")
-    fun getTrailerLink(
+    suspend fun getTrailerLink(
         @Path("movie_id") movie_id: String,
         @Query("api_key") api_key: String,
     ): Response<TrailerResponse>
 
     @GET("movie/{movie_id}/reviews")
-    fun getReviewMovie(
+    suspend fun getReviewMovie(
         @Path("movie_id") movie_id: String,
         @Query("api_key") api_key: String,
         @Query("page") page: Int,

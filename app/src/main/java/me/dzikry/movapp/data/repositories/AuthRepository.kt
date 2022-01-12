@@ -1,7 +1,6 @@
 package me.dzikry.movapp.data.repositories
 
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import me.dzikry.movapp.data.models.response.Meta
 import me.dzikry.movapp.data.models.response.UserResponse
 import me.dzikry.movapp.data.models.response.UserResponseWithoutToken
