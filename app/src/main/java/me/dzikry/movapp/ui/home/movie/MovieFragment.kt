@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import me.dzikry.movapp.data.models.Movie
 import me.dzikry.movapp.data.networks.MovieAPIs
 import me.dzikry.movapp.data.repositories.MovieRepository
@@ -56,6 +57,11 @@ class MovieFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        binding.imageSearch.setOnClickListener {
+            val action = MovieFragmentDirections.actionMovieFragmentToSearchMovieFragment()
+            findNavController().navigate(action)
+        }
 
         viewModel.upcoming.observe(viewLifecycleOwner, { response ->
             when (response) {

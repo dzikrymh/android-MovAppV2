@@ -62,10 +62,9 @@
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/progressBarSearch"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardViewSearch"
-        app:spanCount="3"
+        tools:spanCount="3"
         tools:ignore="SpeakableTextPresentCheck"
         tools:listitem="@layout/item_movie" />
 

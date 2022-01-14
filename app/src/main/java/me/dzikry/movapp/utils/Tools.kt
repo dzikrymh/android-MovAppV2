@@ -3,6 +3,7 @@ package me.dzikry.movapp.utils
 import android.app.Activity
 import android.content.Context
 import android.util.DisplayMetrics
+import android.util.TypedValue
 import android.view.Display
 import me.dzikry.movapp.R
 import kotlin.math.roundToInt
@@ -30,6 +31,15 @@ class Tools {
             val screenWidth = displayMetrics.widthPixels.toFloat()
             val cellWidth = activity.resources.getDimension(R.dimen.item_movie_width)
             return (screenWidth / cellWidth).roundToInt()
+        }
+
+        fun dpToPx(c: Context, dp: Int): Int {
+            val r = c.resources
+            return TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                dp.toFloat(),
+                r.displayMetrics
+            ).roundToInt()
         }
 
     }
