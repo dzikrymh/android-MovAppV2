@@ -9,15 +9,33 @@
         android:id="@+id/movieFragment"
         android:name="me.dzikry.movapp.ui.home.movie.MovieFragment"
         android:label="fragment_movie"
-        tools:layout="@layout/fragment_movie" />
+        tools:layout="@layout/fragment_movie" >
+        <action
+            android:id="@+id/action_movieFragment_to_searchMovieFragment"
+            app:destination="@id/searchMovieFragment" />
+    </fragment>
     <fragment
         android:id="@+id/newsFragment"
         android:name="me.dzikry.movapp.ui.home.news.NewsFragment"
         android:label="fragment_news"
-        tools:layout="@layout/fragment_news" />
+        tools:layout="@layout/fragment_news" >
+        <action
+            android:id="@+id/action_newsFragment_to_searchNewsFragment"
+            app:destination="@id/searchNewsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="me.dzikry.movapp.ui.home.profile.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/searchMovieFragment"
+        android:name="me.dzikry.movapp.ui.search.movie.SearchMovieFragment"
+        android:label="fragment_search_movie"
+        tools:layout="@layout/fragment_search_movie" />
+    <fragment
+        android:id="@+id/searchNewsFragment"
+        android:name="me.dzikry.movapp.ui.search.news.SearchNewsFragment"
+        android:label="fragment_search_news"
+        tools:layout="@layout/fragment_search_news" />
 </navigation>
