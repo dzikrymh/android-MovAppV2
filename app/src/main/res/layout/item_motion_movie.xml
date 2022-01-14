@@ -16,6 +16,7 @@
             android:id="@+id/item_movie_poster"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginBottom="24dp"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -23,13 +24,31 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/sample_movie" />
 
-<!--        <View-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="40dp"-->
-<!--            android:background="@drawable/bg_trans_to_base_color"-->
-<!--            app:layout_constraintBottom_toBottomOf="@+id/item_movie_poster"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent" />-->
+        <View
+            android:id="@+id/view"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_trans_to_base_color"
+            app:layout_constraintBottom_toBottomOf="@+id/item_movie_poster"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="?attr/textPrimary"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/view"
+            tools:text="@tools:sample/lorem"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

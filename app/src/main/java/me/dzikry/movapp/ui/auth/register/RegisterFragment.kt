@@ -94,8 +94,6 @@ class RegisterFragment : Fragment() {
                     isLoading(false)
                     response.data?.let { user ->
                         viewModel.token.observe(viewLifecycleOwner, { token ->
-                            Toast.makeText(context, user.name + " - " + token, Toast.LENGTH_SHORT).show()
-
                             activity?.let { Tools.saveToken(it, token) }
                             gotoHome(token, user)
                         })
