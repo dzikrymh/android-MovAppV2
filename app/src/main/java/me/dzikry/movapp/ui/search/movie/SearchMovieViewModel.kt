@@ -9,12 +9,13 @@ import androidx.paging.cachedIn
 import kotlinx.coroutines.flow.Flow
 import me.dzikry.movapp.data.models.Movie
 import me.dzikry.movapp.data.networks.MovieAPIs
+import me.dzikry.movapp.data.paging.datasources.SearchMoviePagingSource
 
 class SearchMovieViewModel(private val api: MovieAPIs) : ViewModel() {
 
     fun getSearchMovie(keyword: String): Flow<PagingData<Movie>> {
         return Pager (config = PagingConfig(pageSize = 20, maxSize = 200),
-            pagingSourceFactory = {SearchMoviePagingSource(api, keyword)}).flow.cachedIn(viewModelScope)
+            pagingSourceFactory = { SearchMoviePagingSource(api, keyword) }).flow.cachedIn(viewModelScope)
     }
 
 }

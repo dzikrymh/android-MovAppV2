@@ -14,10 +14,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import me.dzikry.movapp.R
 import me.dzikry.movapp.data.models.Movie
 import me.dzikry.movapp.data.networks.MovieAPIs
 import me.dzikry.movapp.databinding.FragmentSearchMovieBinding
+import me.dzikry.movapp.utils.PagingLoadStateAdapter
 import me.dzikry.movapp.ui.search.movie.adapter.SearchMovieAdapter
 import me.dzikry.movapp.utils.SpacingItemDecoration
 import me.dzikry.movapp.utils.Tools
@@ -61,8 +61,11 @@ class SearchMovieFragment : Fragment() {
             recyclerViewSearch.layoutManager = StaggeredGridLayoutManager(Tools.getGridSpanCountMovie(requireActivity()), StaggeredGridLayoutManager.VERTICAL)
             val decoration = SpacingItemDecoration(Tools.getGridSpanCountMovie(requireActivity()), Tools.dpToPx(requireContext(), 2), false)
             recyclerViewSearch.addItemDecoration(decoration)
-            recyclerViewSearch.apply {
-                adapter = mAdapter
+            mAdapter.apply {
+                recyclerViewSearch.adapter = withLoadStateHeaderAndFooter(
+                    header = PagingLoadStateAdapter(this),
+                    footer = PagingLoadStateAdapter(this)
+                )
             }
 
             back.setOnClickListener {
