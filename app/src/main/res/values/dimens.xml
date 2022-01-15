@@ -5,4 +5,6 @@
 
     <dimen name="item_news_width">250dp</dimen>
     <dimen name="item_news_height">200dp</dimen>
+
+    <dimen name="radius_card_movie">10dp</dimen>
 </resources>

@@ -47,7 +47,7 @@ class MovieRepository(private val api: MovieAPIs) {
         }
     }
 
-    suspend fun getGenre(page: Int) : GenreResponse {
+    suspend fun getGenre() : GenreResponse {
         val response = api.getGenreMovie(
             api_key = Const.API_KEY_MOVIE,
         )

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:scrollbars="vertical"
     tools:context=".ui.home.movie.MovieFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -44,6 +45,7 @@
             android:layout_marginEnd="16dp"
             android:text="@string/upcoming"
             android:textColor="?attr/textPrimary"
+            android:fontFamily="@font/poppins"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -56,6 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
+            android:fontFamily="@font/poppins"
             android:text="@string/stay_updated"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -149,6 +152,141 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/titleGenre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/genre"
+            android:textColor="?attr/textPrimary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/poppins"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lytUpcoming" />
+
+        <TextView
+            android:id="@+id/subtitleGenre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/explore_genre_movie"
+            android:fontFamily="@font/poppins"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleGenre" />
+
+        <LinearLayout
+            android:id="@+id/lytGenre"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/subtitleGenre">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/genre_movies"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:visibility="gone"
+                tools:visibility="visible"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/subtitleGenre"
+                tools:ignore="SpeakableTextPresentCheck"
+                tools:listitem="@layout/item_genre_movie" />
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerGenre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                tools:visibility="gone"
+                app:shimmer_duration="800">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="80dp"
+                        android:layout_height="40dp"
+                        app:cardCornerRadius="8dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="4dp">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@android:color/darker_gray"/>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="80dp"
+                        android:layout_height="40dp"
+                        app:cardCornerRadius="8dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="4dp">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@android:color/darker_gray"/>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="80dp"
+                        android:layout_height="40dp"
+                        app:cardCornerRadius="8dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="4dp">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@android:color/darker_gray"/>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="80dp"
+                        android:layout_height="40dp"
+                        app:cardCornerRadius="8dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="4dp">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@android:color/darker_gray"/>
+
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+        </LinearLayout>
+
+        <TextView
             android:id="@+id/titlePopular"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -159,9 +297,10 @@
             android:textColor="?attr/textPrimary"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:fontFamily="@font/poppins"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lytUpcoming" />
+            app:layout_constraintTop_toBottomOf="@+id/lytGenre" />
 
         <TextView
             android:id="@+id/subtitlePopular"
@@ -170,6 +309,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:text="@string/most_popular_movies"
+            android:fontFamily="@font/poppins"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/titlePopular" />
@@ -275,6 +415,7 @@
             android:textColor="?attr/textPrimary"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:fontFamily="@font/poppins"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/lytPopular" />
@@ -286,6 +427,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:text="@string/highest_rated_movies"
+            android:fontFamily="@font/poppins"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/titleTopRated" />
@@ -294,7 +436,9 @@
             android:id="@+id/lytTopRated"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/subtitleTopRated">
@@ -309,68 +453,68 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:visibility="gone"
-                tools:visibility="visible"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/subtitleTopRated"
                 tools:ignore="SpeakableTextPresentCheck"
-                tools:listitem="@layout/item_movie" />
+                tools:listitem="@layout/item_movie"
+                tools:visibility="visible" />
 
             <com.facebook.shimmer.ShimmerFrameLayout
                 android:id="@+id/shimmerTopRated"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="visible"
-                tools:visibility="gone"
-                app:shimmer_duration="800">
+                app:shimmer_duration="800"
+                tools:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="8dp">
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
 
                     <androidx.cardview.widget.CardView
                         android:layout_width="@dimen/item_movie_width"
                         android:layout_height="@dimen/item_movie_height"
-                        app:cardCornerRadius="8dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="4dp">
+                        android:layout_marginBottom="4dp"
+                        app:cardCornerRadius="8dp">
 
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@android:color/darker_gray"/>
+                            android:background="@android:color/darker_gray" />
 
                     </androidx.cardview.widget.CardView>
 
                     <androidx.cardview.widget.CardView
                         android:layout_width="@dimen/item_movie_width"
                         android:layout_height="@dimen/item_movie_height"
-                        app:cardCornerRadius="8dp"
                         android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="4dp">
+                        android:layout_marginBottom="4dp"
+                        app:cardCornerRadius="8dp">
 
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@android:color/darker_gray"/>
+                            android:background="@android:color/darker_gray" />
 
                     </androidx.cardview.widget.CardView>
 
                     <androidx.cardview.widget.CardView
                         android:layout_width="@dimen/item_movie_width"
                         android:layout_height="@dimen/item_movie_height"
-                        app:cardCornerRadius="8dp"
                         android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="4dp">
+                        android:layout_marginBottom="4dp"
+                        app:cardCornerRadius="8dp">
 
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@android:color/darker_gray"/>
+                            android:background="@android:color/darker_gray" />
 
                     </androidx.cardview.widget.CardView>
 
@@ -382,4 +526,4 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.core.widget.NestedScrollView>
+</ScrollView>

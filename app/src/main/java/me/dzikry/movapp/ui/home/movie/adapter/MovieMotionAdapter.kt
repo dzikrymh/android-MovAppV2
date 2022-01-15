@@ -1,5 +1,6 @@
 package me.dzikry.movapp.ui.home.movie.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -13,6 +14,7 @@ import me.dzikry.movapp.data.models.Movie
 import me.dzikry.movapp.databinding.ItemMotionMovieBinding
 import me.dzikry.movapp.databinding.ItemMovieBinding
 import me.dzikry.movapp.utils.Const
+import java.text.SimpleDateFormat
 
 class MovieMotionAdapter(
     private val onMovieClick: (movie: Movie) -> Unit
@@ -44,16 +46,25 @@ class MovieMotionAdapter(
 
     override fun getItemCount(): Int = differ.currentList.size
 
+    @SuppressLint("SimpleDateFormat")
     override fun onBindViewHolder(holder: MovieMotionViewHolder, position: Int) {
         val movie = differ.currentList[position]
 
-        Glide.with(holder.itemView.context)
-            .load(Const.BASE_PATH_BACKDROP + movie.backdropPath)
-            .transform(CenterCrop())
-            .into(holder.item.itemMoviePoster)
+        holder.item.apply {
+            Glide.with(holder.itemView.context)
+                .load(Const.BASE_PATH_BACKDROP + movie.backdropPath)
+                .transform(CenterCrop())
+                .into(itemMoviePoster)
 
-        holder.item.title.text = movie.title
-
+            title.text = movie.title
+            try {
+                val date = SimpleDateFormat("yyyy-MM-dd").parse(movie.releaseDate)
+                release.text = SimpleDateFormat("dd MMM yyyy").format(date)
+            } catch (e: Exception) {
+                release.text = movie.releaseDate
+            }
+            rate.text = movie.rating.toString()
+        }
         holder.itemView.setOnClickListener { onMovieClick.invoke(movie) }
     }
 

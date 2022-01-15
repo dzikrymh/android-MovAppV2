@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_movieFragment_to_searchMovieFragment"
             app:destination="@id/searchMovieFragment" />
+        <action
+            android:id="@+id/action_movieFragment_to_movieByGenreFragment"
+            app:destination="@id/movieByGenreFragment" />
     </fragment>
     <fragment
         android:id="@+id/newsFragment"
@@ -38,4 +41,13 @@
         android:name="me.dzikry.movapp.ui.search.news.SearchNewsFragment"
         android:label="fragment_search_news"
         tools:layout="@layout/fragment_search_news" />
+    <fragment
+        android:id="@+id/movieByGenreFragment"
+        android:name="me.dzikry.movapp.ui.movie_by_genre.MovieByGenreFragment"
+        android:label="fragment_movie_by_genre"
+        tools:layout="@layout/fragment_movie_by_genre" >
+        <argument
+            android:name="genre_id"
+            app:argType="integer" />
+    </fragment>
 </navigation>

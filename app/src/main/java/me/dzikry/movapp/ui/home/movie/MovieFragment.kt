@@ -9,10 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
+import me.dzikry.movapp.data.models.Genre
 import me.dzikry.movapp.data.models.Movie
 import me.dzikry.movapp.data.networks.MovieAPIs
 import me.dzikry.movapp.data.repositories.MovieRepository
 import me.dzikry.movapp.databinding.FragmentMovieBinding
+import me.dzikry.movapp.ui.home.movie.adapter.GenreAdapter
 import me.dzikry.movapp.ui.home.movie.adapter.MovieAdapter
 import me.dzikry.movapp.ui.home.movie.adapter.MovieMotionAdapter
 import me.dzikry.movapp.utils.Resource
@@ -29,6 +31,7 @@ class MovieFragment : Fragment() {
     private lateinit var popularAdapter: MovieAdapter
     private lateinit var topRatedAdapter: MovieAdapter
     private lateinit var upcomingAdapter: MovieMotionAdapter
+    private lateinit var genreAdapter: GenreAdapter
 
     private var popularPage = 1
     private var upcomingPage = 1
@@ -43,6 +46,7 @@ class MovieFragment : Fragment() {
         viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
 
         viewModel.getUpcoming(upcomingPage)
+        viewModel.getGenre()
         viewModel.getPopular(popularPage)
         viewModel.getTopRated(topRatedPage)
     }
@@ -83,6 +87,30 @@ class MovieFragment : Fragment() {
                 }
                 is Resource.Loading -> {
                     isLoadingUpcoming(true)
+                }
+            }
+        })
+
+        viewModel.genre.observe(viewLifecycleOwner, { response ->
+            when (response) {
+                is Resource.Success -> {
+                    isLoadingGenre(false)
+                    response.data?.let {
+                        genreAdapter = GenreAdapter { genre -> showMovieByGenre(genre) }
+                        binding.genreMovies.apply {
+                            adapter = genreAdapter
+                        }
+                        genreAdapter.differ.submitList(it)
+                    }
+                }
+                is Resource.Error -> {
+                    isLoadingGenre(false)
+                    response.message?.let {
+                        Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                    }
+                }
+                is Resource.Loading -> {
+                    isLoadingGenre(true)
                 }
             }
         })
@@ -136,6 +164,11 @@ class MovieFragment : Fragment() {
         })
     }
 
+    private fun showMovieByGenre(genre: Genre) {
+        val action = MovieFragmentDirections.actionMovieFragmentToMovieByGenreFragment(genre.id)
+        findNavController().navigate(action)
+    }
+
     private fun showMovieDetail(movie: Movie) {
         Toast.makeText(context, movie.title, Toast.LENGTH_SHORT).show()
     }
@@ -158,6 +191,13 @@ class MovieFragment : Fragment() {
         binding.apply {
             topRatedMovies.visibility = if (bool) View.GONE else View.VISIBLE
             shimmerTopRated.visibility = if (bool) View.VISIBLE else View.GONE
+        }
+    }
+
+    private fun isLoadingGenre(bool: Boolean) {
+        binding.apply {
+            genreMovies.visibility = if (bool) View.GONE else View.VISIBLE
+            shimmerGenre.visibility = if (bool) View.VISIBLE else View.GONE
         }
     }
 
