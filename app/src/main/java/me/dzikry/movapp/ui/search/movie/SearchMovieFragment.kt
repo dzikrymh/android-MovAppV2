@@ -91,7 +91,8 @@ class SearchMovieFragment : Fragment() {
     }
 
     private fun showDetailMovie(movie: Movie) {
-        Toast.makeText(context, movie.title, Toast.LENGTH_SHORT).show()
+        val action = SearchMovieFragmentDirections.actionSearchMovieFragmentToMovieDetailFragment(movie.id)
+        findNavController().navigate(action)
     }
 
 }

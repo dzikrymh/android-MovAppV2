@@ -42,5 +42,17 @@ class Tools {
             ).roundToInt()
         }
 
+        fun getHeightScreen(activity: Activity): Int {
+            val displayMetrics = DisplayMetrics()
+            activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
+            return displayMetrics.heightPixels
+        }
+
+        fun getWidthScreen(activity: Activity): Int {
+            val displayMetrics = DisplayMetrics()
+            activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
+            return displayMetrics.widthPixels
+        }
+
     }
 }

@@ -170,7 +170,8 @@ class MovieFragment : Fragment() {
     }
 
     private fun showMovieDetail(movie: Movie) {
-        Toast.makeText(context, movie.title, Toast.LENGTH_SHORT).show()
+        val action = MovieFragmentDirections.actionMovieFragmentToMovieDetailFragment(movie.id)
+        findNavController().navigate(action)
     }
 
     private fun isLoadingPopular(bool: Boolean) {
