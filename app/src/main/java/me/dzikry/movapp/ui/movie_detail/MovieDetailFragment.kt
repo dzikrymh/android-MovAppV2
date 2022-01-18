@@ -1,5 +1,6 @@
 package me.dzikry.movapp.ui.movie_detail
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -10,18 +11,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import me.dzikry.movapp.data.models.Genre
 import me.dzikry.movapp.data.models.Review
 import me.dzikry.movapp.data.networks.MovieAPIs
 import me.dzikry.movapp.data.repositories.MovieRepository
 import me.dzikry.movapp.databinding.FragmentMovieDetailBinding
 import me.dzikry.movapp.ui.movie_detail.adapter.GenreAdapter
-import me.dzikry.movapp.ui.movie_detail.adapter.ReviewAdapter
+import me.dzikry.movapp.ui.movie_detail.adapter.ReviewPagingAdapter
 import me.dzikry.movapp.utils.Const
+import me.dzikry.movapp.utils.PagingLoadStateAdapter
 import me.dzikry.movapp.utils.Resource
 import me.dzikry.movapp.utils.Tools
 import java.text.SimpleDateFormat
@@ -37,10 +42,9 @@ class MovieDetailFragment : Fragment() {
     private lateinit var binding: FragmentMovieDetailBinding
 
     private lateinit var genreAdapter: GenreAdapter
-    private lateinit var reviewAdapter: ReviewAdapter
+    private lateinit var reviewPagingAdapter: ReviewPagingAdapter
 
     private val args: MovieDetailFragmentArgs by navArgs()
-    private var reviewPage = 1
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -52,7 +56,6 @@ class MovieDetailFragment : Fragment() {
 
         viewModel.getMovie(args.movieId.toString())
         viewModel.getTrailer(args.movieId.toString())
-        viewModel.getReviews(args.movieId.toString(), reviewPage)
     }
 
     override fun onCreateView(
@@ -63,11 +66,12 @@ class MovieDetailFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("SimpleDateFormat")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         genreAdapter = GenreAdapter(mutableListOf()) { genre -> showMovieByGenre(genre) }
-        reviewAdapter = ReviewAdapter(mutableListOf()) { review -> showReviewDetail(review) }
+        reviewPagingAdapter = ReviewPagingAdapter { review -> showReviewDetail(review) }
 
         viewModel.movie.observe(viewLifecycleOwner, { response ->
             when (response) {
@@ -89,7 +93,7 @@ class MovieDetailFragment : Fragment() {
                             try {
                                 val parser = SimpleDateFormat("yyyy-MM-dd")
                                 val formatter = SimpleDateFormat("dd MMMM yyyy")
-                                val dt = formatter.format(parser.parse(it.releaseDate))
+                                val dt = formatter.format(parser.parse(it.releaseDate)!!)
                                 movieReleaseDate.text = dt
                             } catch (e: Exception) {
                                 movieReleaseDate.text = it.releaseDate
@@ -148,26 +152,18 @@ class MovieDetailFragment : Fragment() {
         }
 
         initReviewsSize()
-        viewModel.reviews.observe(viewLifecycleOwner, { response ->
-            when (response) {
-                is Resource.Success -> {
-                    response.data?.let {
-                        binding.reviewMovies.apply {
-                            adapter = reviewAdapter
-                        }
-                        reviewAdapter.appendReviews(it)
-                    }
-                }
-                is Resource.Error -> {
-                    response.message?.let {
-                        Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-                    }
-                }
-                is Resource.Loading -> {
-
-                }
+        reviewPagingAdapter.apply {
+            binding.reviewMovies.adapter = withLoadStateHeaderAndFooter(
+                header = PagingLoadStateAdapter(this),
+                footer = PagingLoadStateAdapter(this)
+            )
+        }
+        lifecycleScope.launch {
+            viewModel.getReviewPaging(args.movieId.toString()).collectLatest {
+                reviewPagingAdapter.submitData(it)
             }
-        })
+        }
+
     }
 
     private fun showReviewDetail(review: Review) {
@@ -182,7 +178,7 @@ class MovieDetailFragment : Fragment() {
     private fun initReviewsSize() {
         val param = binding.reviewMovies.layoutParams
         param.width = Tools.getWidthScreen(requireActivity())
-        param.height = Tools.getHeightScreen(requireActivity())
+        param.height = Tools.getHeightScreen(requireActivity()) - Tools.getStatusBarHeight(requireContext()) - Tools.getSizeBottomNavBar(requireContext())
         binding.reviewMovies.layoutParams = param
     }
 

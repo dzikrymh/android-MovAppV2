@@ -1,10 +1,13 @@
 package me.dzikry.movapp.ui.movie_detail.adapter
 
+import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -20,38 +23,18 @@ import java.lang.Exception
 import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 
-class ReviewAdapter(
-    private var reviews: MutableList<Review>,
-    private var onReviewClick: (review: Review) -> Unit
-) : RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder>() {
+class ReviewPagingAdapter(
+    private val onReviewClick: (review: Review) -> Unit
+) : PagingDataAdapter<Review, ReviewPagingAdapter.ReviewViewHolder>(ReviewPagingAdapter.DiffUtilCallBack()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewAdapter.ReviewViewHolder {
-        val view = LayoutInflater.from(parent.context)
-        val binding = ItemReviewMovieBinding.inflate(view, parent, false)
-        return ReviewViewHolder(binding)
-    }
+    inner class ReviewViewHolder(val item : ItemReviewMovieBinding): RecyclerView.ViewHolder(item.root) {
 
-    override fun onBindViewHolder(holder: ReviewAdapter.ReviewViewHolder, position: Int) {
-        holder.bind(reviews[position])
-    }
+        private val binding = item
 
-    override fun getItemCount(): Int = reviews.size
-
-    fun appendReviews(reviews: List<Review>) {
-        this.reviews.addAll(reviews)
-        notifyItemRangeInserted(
-            this.reviews.size,
-            reviews.size - 1
-        )
-        notifyDataSetChanged()
-    }
-
-    inner class ReviewViewHolder(itemView: ItemReviewMovieBinding) : RecyclerView.ViewHolder(itemView.root) {
-        private val binding = itemView
-
+        @SuppressLint("SimpleDateFormat")
         fun bind(review: Review) {
-            if (review.author_details.photo != null) {
-                val url = StringBuilder(review.author_details.photo)
+            review.author_details.photo?.let {
+                val url = StringBuilder(it)
                 if (url.indexOf("http") == -1) {
                     url.insert(0, Const.BASE_PATH_AVATAR)
                 } else {
@@ -88,7 +71,7 @@ class ReviewAdapter(
             try {
                 val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
                 val formatter = SimpleDateFormat("dd MMMM yyyy")
-                val dt = formatter.format(parser.parse(review.updated_at))
+                val dt = formatter.format(parser.parse(review.updated_at)!!)
                 binding.date.text = dt
             } catch (e: Exception) {
                 binding.date.text = review.updated_at
@@ -105,6 +88,27 @@ class ReviewAdapter(
             }
 
             itemView.setOnClickListener { onReviewClick.invoke(review) }
+        }
+    }
+
+    override fun onBindViewHolder(holder: ReviewViewHolder, position: Int) {
+        val review = getItem(position)!!
+        holder.bind(review)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewViewHolder {
+        return ReviewViewHolder(
+            ItemReviewMovieBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        )
+    }
+
+    class DiffUtilCallBack: DiffUtil.ItemCallback<Review>() {
+        override fun areItemsTheSame(oldItem: Review, newItem: Review): Boolean {
+            return oldItem.author == newItem.author
+        }
+
+        override fun areContentsTheSame(oldItem: Review, newItem: Review): Boolean {
+            return oldItem == newItem
         }
     }
 }

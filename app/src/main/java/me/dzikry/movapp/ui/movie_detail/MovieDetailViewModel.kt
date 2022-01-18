@@ -4,10 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import me.dzikry.movapp.data.models.MovieDetail
 import me.dzikry.movapp.data.models.Review
 import me.dzikry.movapp.data.models.Trailer
+import me.dzikry.movapp.data.paging.datasources.ReviewMoviePagingSource
 import me.dzikry.movapp.data.repositories.MovieRepository
 import me.dzikry.movapp.utils.Resource
 import okio.IOException
@@ -48,5 +54,17 @@ class MovieDetailViewModel(private val repository: MovieRepository) : ViewModel(
         } catch (e: IOException) {
             _reviews.postValue(Resource.Error(e.message))
         }
+    }
+
+    fun getReviewPaging(movie_id: String) : Flow<PagingData<Review>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 20,
+                maxSize = 200
+            ),
+            pagingSourceFactory = {
+                ReviewMoviePagingSource(movie_id)
+            }
+        ).flow.cachedIn(viewModelScope)
     }
 }
