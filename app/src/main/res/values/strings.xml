@@ -45,4 +45,6 @@
     <string name="retry">Retry</string>
     <string name="explore_genre_movie">Explore more genre movie</string>
     <string name="menu">menu</string>
+    <string name="date">Date</string>
+    <string name="image_news">Image News</string>
 </resources>

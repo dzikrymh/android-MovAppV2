@@ -1,6 +1,8 @@
 package me.dzikry.movapp.ui.search.news
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -79,11 +81,15 @@ class SearchNewsFragment : Fragment() {
     }
 
     private fun showNewsDetail(article: Article) {
-        val gson = Gson()
-        val jsonArticle = gson.toJson(article)
+//        val gson = Gson()
+//        val jsonArticle = gson.toJson(article)
+//
+//        val action = SearchNewsFragmentDirections.actionSearchNewsFragmentToNewsDetailFragment(jsonArticle)
+//        findNavController().navigate(action)
 
-        val action = SearchNewsFragmentDirections.actionSearchNewsFragmentToNewsDetailFragment(jsonArticle)
-        findNavController().navigate(action)
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse(article.url)
+        startActivity(intent)
     }
 
 }
