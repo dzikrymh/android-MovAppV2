@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat
 
 class ReviewPagingAdapter(
     private val onReviewClick: (review: Review) -> Unit
-) : PagingDataAdapter<Review, ReviewPagingAdapter.ReviewViewHolder>(ReviewPagingAdapter.DiffUtilCallBack()) {
+) : PagingDataAdapter<Review, ReviewPagingAdapter.ReviewViewHolder>(DiffUtilCallBack()) {
 
     inner class ReviewViewHolder(val item : ItemReviewMovieBinding): RecyclerView.ViewHolder(item.root) {
 

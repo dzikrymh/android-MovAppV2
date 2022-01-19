@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_newsFragment_to_searchNewsFragment"
             app:destination="@id/searchNewsFragment" />
+        <action
+            android:id="@+id/action_newsFragment_to_newsDetailFragment"
+            app:destination="@id/newsDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -47,7 +50,11 @@
         android:id="@+id/searchNewsFragment"
         android:name="me.dzikry.movapp.ui.search.news.SearchNewsFragment"
         android:label="fragment_search_news"
-        tools:layout="@layout/fragment_search_news" />
+        tools:layout="@layout/fragment_search_news" >
+        <action
+            android:id="@+id/action_searchNewsFragment_to_newsDetailFragment"
+            app:destination="@id/newsDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/movieByGenreFragment"
         android:name="me.dzikry.movapp.ui.movie_by_genre.MovieByGenreFragment"
@@ -71,5 +78,14 @@
         <action
             android:id="@+id/action_movieDetailFragment_to_movieByGenreFragment"
             app:destination="@id/movieByGenreFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newsDetailFragment"
+        android:name="me.dzikry.movapp.ui.news_detail.NewsDetailFragment"
+        android:label="fragment_news_detail"
+        tools:layout="@layout/fragment_news_detail" >
+        <argument
+            android:name="json_article"
+            app:argType="string" />
     </fragment>
 </navigation>
