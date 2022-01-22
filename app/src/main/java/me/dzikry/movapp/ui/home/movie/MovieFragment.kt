@@ -18,6 +18,7 @@ import me.dzikry.movapp.ui.home.movie.adapter.GenreAdapter
 import me.dzikry.movapp.ui.home.movie.adapter.MovieAdapter
 import me.dzikry.movapp.ui.home.movie.adapter.MovieMotionAdapter
 import me.dzikry.movapp.utils.Resource
+import me.dzikry.movapp.utils.Tools
 
 class MovieFragment : Fragment() {
 
@@ -56,6 +57,23 @@ class MovieFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMovieBinding.inflate(layoutInflater, container, false)
+
+        Tools.setStatusBarTransparent(requireActivity())
+        Tools.setMargins(
+            binding.imageLogo,
+            left = Tools.dpToPx(requireContext(), 16),
+            top = Tools.dpToPx(requireContext(), 16) + Tools.getStatusBarHeight(requireContext()),
+            right = 0,
+            bottom = 0
+        )
+        Tools.setMargins(
+            binding.imageSearch,
+            left = 0,
+            top = Tools.dpToPx(requireContext(), 16) + Tools.getStatusBarHeight(requireContext()),
+            right = Tools.dpToPx(requireContext(), 16),
+            bottom = 0
+        )
+
         return binding.root
     }
 

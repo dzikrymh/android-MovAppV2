@@ -45,6 +45,7 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentLoginBinding.inflate(inflater, container, false)
+        Tools.setStatusBarTransparent(requireActivity())
         return binding.root
     }
 

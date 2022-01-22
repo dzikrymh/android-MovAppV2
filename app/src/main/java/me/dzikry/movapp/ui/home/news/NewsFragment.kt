@@ -20,6 +20,7 @@ import me.dzikry.movapp.databinding.FragmentNewsBinding
 import me.dzikry.movapp.ui.home.news.adapter.NewsAdapter
 import me.dzikry.movapp.ui.home.news.adapter.TrendingAdapter
 import me.dzikry.movapp.utils.Resource
+import me.dzikry.movapp.utils.Tools
 
 class NewsFragment : Fragment() {
 
@@ -49,6 +50,23 @@ class NewsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentNewsBinding.inflate(inflater, container, false)
+
+        Tools.setStatusBarTransparent(requireActivity())
+        Tools.setMargins(
+            binding.cardViewSearch,
+            left = Tools.dpToPx(requireContext(), 16),
+            top = Tools.dpToPx(requireContext(), 16) + Tools.getStatusBarHeight(requireContext()),
+            right = 0,
+            bottom = 0
+        )
+        Tools.setMargins(
+            binding.buttonMenu,
+            left = 0,
+            top = 0,
+            right = Tools.dpToPx(requireContext(), 16),
+            bottom = 0
+        )
+
         return binding.root
     }
 

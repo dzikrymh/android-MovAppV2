@@ -46,6 +46,7 @@ class RegisterFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentRegisterBinding.inflate(inflater, container, false)
+        Tools.setStatusBarTransparent(requireActivity())
         return binding.root
     }
 

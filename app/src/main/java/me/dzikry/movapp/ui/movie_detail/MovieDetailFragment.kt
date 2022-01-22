@@ -63,6 +63,7 @@ class MovieDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMovieDetailBinding.inflate(inflater, container, false)
+        Tools.setStatusBarTransparent(requireActivity())
         return binding.root
     }
 

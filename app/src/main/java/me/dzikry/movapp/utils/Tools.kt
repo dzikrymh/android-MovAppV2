@@ -2,10 +2,17 @@ package me.dzikry.movapp.utils
 
 import android.app.Activity
 import android.content.Context
+import android.content.res.Configuration
+import android.graphics.Color
+import android.os.Build
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.Display
+import android.view.View
+import android.view.ViewGroup.MarginLayoutParams
+import android.view.WindowManager
 import me.dzikry.movapp.R
+import java.lang.Exception
 import kotlin.math.roundToInt
 
 class Tools {
@@ -68,6 +75,49 @@ class Tools {
             return if (resourceId > 0) {
                 resources.getDimensionPixelSize(resourceId)
             } else 0
+        }
+
+        fun setMargins(view: View, left: Int, top: Int, right: Int, bottom: Int) {
+            if (view.layoutParams is MarginLayoutParams) {
+                val p = view.layoutParams as MarginLayoutParams
+                p.setMargins(left, top, right, bottom)
+                view.requestLayout()
+            }
+        }
+
+        fun setStatusBarTransparent(act: Activity) {
+            try {
+                when (act.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+                    Configuration.UI_MODE_NIGHT_NO -> {
+                        lightThemeStatusBar(act)
+                    } // Night mode is not active, we're using the light theme
+                    Configuration.UI_MODE_NIGHT_YES -> {
+                        darkThemeStatusBar(act)
+                    } // Night mode is active, we're using dark theme
+                }
+            } catch (e: Exception) {
+                // light theme
+                lightThemeStatusBar(act)
+            }
+        }
+
+        private fun lightThemeStatusBar(act: Activity) {
+            act.window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            act.window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                act.window.decorView.systemUiVisibility =
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            } else {
+                act.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            }
+            act.window.statusBarColor = Color.TRANSPARENT
+        }
+
+        private fun darkThemeStatusBar(act: Activity) {
+            act.window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            act.window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            act.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            act.window.statusBarColor = Color.TRANSPARENT
         }
 
     }

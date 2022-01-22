@@ -48,6 +48,16 @@ class MovieByGenreFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMovieByGenreBinding.inflate(inflater, container, false)
+
+        Tools.setStatusBarTransparent(requireActivity())
+        Tools.setMargins(
+            binding.titleGenre,
+            left = Tools.dpToPx(requireContext(), 16),
+            top = Tools.dpToPx(requireContext(), 16) + Tools.getStatusBarHeight(requireContext()),
+            right = Tools.dpToPx(requireContext(), 16),
+            bottom = 0
+        )
+
         return binding.root
     }
 

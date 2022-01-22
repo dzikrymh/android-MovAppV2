@@ -45,6 +45,7 @@ class SplashFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Tools.setStatusBarTransparent(requireActivity())
         return inflater.inflate(R.layout.fragment_splash, container, false)
     }
 

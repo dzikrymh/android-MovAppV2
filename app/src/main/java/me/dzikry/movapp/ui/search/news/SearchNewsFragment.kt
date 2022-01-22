@@ -20,6 +20,7 @@ import me.dzikry.movapp.data.networks.NewsAPIs
 import me.dzikry.movapp.databinding.FragmentSearchNewsBinding
 import me.dzikry.movapp.ui.search.news.adapter.SearchNewsAdapter
 import me.dzikry.movapp.utils.PagingLoadStateAdapter
+import me.dzikry.movapp.utils.Tools
 
 class SearchNewsFragment : Fragment() {
 
@@ -44,6 +45,23 @@ class SearchNewsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSearchNewsBinding.inflate(inflater, container, false)
+
+        Tools.setStatusBarTransparent(requireActivity())
+        Tools.setMargins(
+            binding.back,
+            left = Tools.dpToPx(requireContext(), 16),
+            top = 0,
+            right = 0,
+            bottom = 0
+        )
+        Tools.setMargins(
+            binding.cardViewSearch,
+            left = Tools.dpToPx(requireContext(), 16),
+            top = Tools.dpToPx(requireContext(), 16) + Tools.getStatusBarHeight(requireContext()),
+            right = Tools.dpToPx(requireContext(), 16),
+            bottom = 0
+        )
+
         return binding.root
     }
 

@@ -46,6 +46,23 @@ class SearchMovieFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSearchMovieBinding.inflate(inflater, container, false)
+
+        Tools.setStatusBarTransparent(requireActivity())
+        Tools.setMargins(
+            binding.back,
+            left = Tools.dpToPx(requireContext(), 16),
+            top = 0,
+            right = 0,
+            bottom = 0
+        )
+        Tools.setMargins(
+            binding.cardViewSearch,
+            left = Tools.dpToPx(requireContext(), 16),
+            top = Tools.dpToPx(requireContext(), 16) + Tools.getStatusBarHeight(requireContext()),
+            right = Tools.dpToPx(requireContext(), 16),
+            bottom = 0
+        )
+
         return binding.root
     }
 
