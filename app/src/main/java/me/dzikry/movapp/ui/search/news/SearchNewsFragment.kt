@@ -21,6 +21,7 @@ import me.dzikry.movapp.databinding.FragmentSearchNewsBinding
 import me.dzikry.movapp.ui.search.news.adapter.SearchNewsAdapter
 import me.dzikry.movapp.utils.PagingLoadStateAdapter
 import me.dzikry.movapp.utils.Tools
+import me.dzikry.movapp.utils.Tools.Companion.hideKeyboard
 
 class SearchNewsFragment : Fragment() {
 
@@ -91,6 +92,7 @@ class SearchNewsFragment : Fragment() {
     }
 
     private fun searchNews(keyword: String) {
+        view?.let { context?.hideKeyboard(it) }
         lifecycleScope.launch {
             viewModel.getSearchNews(keyword = keyword).collectLatest {
                 mAdapter.submitData(it)

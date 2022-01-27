@@ -11,12 +11,18 @@ import android.view.Display
 import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import me.dzikry.movapp.R
 import java.lang.Exception
 import kotlin.math.roundToInt
 
 class Tools {
     companion object {
+
+        fun Context.hideKeyboard(view: View) {
+            val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+        }
 
         fun saveToken(activity: Activity, token: String) {
             val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)

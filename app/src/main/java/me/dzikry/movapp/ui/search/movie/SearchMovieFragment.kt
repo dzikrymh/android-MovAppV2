@@ -11,6 +11,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -21,6 +22,7 @@ import me.dzikry.movapp.utils.PagingLoadStateAdapter
 import me.dzikry.movapp.ui.search.movie.adapter.SearchMovieAdapter
 import me.dzikry.movapp.utils.SpacingItemDecoration
 import me.dzikry.movapp.utils.Tools
+import me.dzikry.movapp.utils.Tools.Companion.hideKeyboard
 
 class SearchMovieFragment : Fragment() {
 
@@ -83,23 +85,41 @@ class SearchMovieFragment : Fragment() {
                     header = PagingLoadStateAdapter(this),
                     footer = PagingLoadStateAdapter(this)
                 )
+                addLoadStateListener { loadState ->
+                    if (loadState.refresh is LoadState.Loading) {
+                        isLoadingMovie(true)
+                    } else if (loadState.refresh is LoadState.NotLoading) {
+                        isLoadingMovie(false)
+                    }
+                    if (loadState.refresh is LoadState.NotLoading &&
+                        loadState.append.endOfPaginationReached &&
+                        mAdapter.itemCount < 1) {
+                        binding.movieNotFound.visibility = View.VISIBLE
+                    }
+                }
             }
 
             back.setOnClickListener {
                 findNavController().popBackStack()
             }
 
-            edtSearch.setOnEditorActionListener { view, id, keyEvent ->
+            edtSearch.setOnEditorActionListener { _, id, _ ->
                 if (id == EditorInfo.IME_ACTION_SEARCH) {
                     searchMovie(edtSearch.text.toString().trim())
-                    true
                 }
                 false
             }
         }
     }
 
+    private fun isLoadingMovie(bool: Boolean) {
+        binding.movieNotFound.visibility = View.GONE
+        binding.shimmerSearchMovie.visibility = if (bool) View.VISIBLE else View.GONE
+        binding.recyclerViewSearch.visibility = if (bool) View.GONE else View.VISIBLE
+    }
+
     private fun searchMovie(keyword: String) {
+        view?.let { context?.hideKeyboard(it) }
         lifecycleScope.launch {
             viewModel.getSearchMovie(keyword).collectLatest {
                 mAdapter.submitData(it)

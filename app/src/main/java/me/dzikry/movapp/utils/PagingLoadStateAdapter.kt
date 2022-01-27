@@ -2,6 +2,7 @@ package me.dzikry.movapp.utils
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
@@ -50,10 +51,6 @@ class PagingLoadStateAdapter<T : Any, VH : RecyclerView.ViewHolder>(
                     is IOException -> {
                         errorMsg.text = "Failed fetch data"
                     }
-                    else -> {
-                        errorMsg.text = (loadState as? LoadState.Error)?.error?.message
-                    }
-
                 }
             }
         }

@@ -18,14 +18,14 @@ class SearchMovieAdapter(
     inner class MovieViewHolder(val item : ItemMovieBinding): RecyclerView.ViewHolder(item.root)
 
     override fun onBindViewHolder(holder: SearchMovieAdapter.MovieViewHolder, position: Int) {
-        val movie = getItem(position)!!
+        getItem(position)?.let { movie ->
+            Glide.with(holder.itemView.context)
+                .load(Const.BASE_PATH_POSTER + movie.posterPath)
+                .transform(CenterCrop())
+                .into(holder.item.itemMoviePoster)
 
-        Glide.with(holder.itemView.context)
-            .load(Const.BASE_PATH_POSTER + movie.posterPath)
-            .transform(CenterCrop())
-            .into(holder.item.itemMoviePoster)
-
-        holder.itemView.setOnClickListener { onMovieClick.invoke(movie) }
+            holder.itemView.setOnClickListener { onMovieClick.invoke(movie) }
+        }
     }
 
     override fun onCreateViewHolder(

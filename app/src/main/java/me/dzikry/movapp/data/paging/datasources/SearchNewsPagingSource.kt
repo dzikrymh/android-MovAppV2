@@ -24,23 +24,17 @@ class SearchNewsPagingSource(private val api: NewsAPIs, private val keyword: Str
                 pageSize = PAGE_SIZE_NEWS,
             )
             if (response.isSuccessful) {
-                var nextPageNumber: Int? = null
-                var prevPageNumber: Int? = null
-                var totalPage: Int = response.body()?.totalResults?.div(PAGE_SIZE_NEWS) ?: 1
-                if (totalPage == 0) totalPage = 1
-                if (page != totalPage) nextPageNumber = page + 1
-                if (page != FIRST_PAGE_INDEX) prevPageNumber = page - 1
                 LoadResult.Page(
                     data = response.body()!!.articles,
-                    prevKey = prevPageNumber,
-                    nextKey = nextPageNumber
+                    prevKey = if (page == FIRST_PAGE_INDEX) null else page - 1,
+                    nextKey = if (response.body()?.totalResults!! < params.loadSize) null else page + 1
                 )
             } else {
                 throw IOException("Failed fetch data")
             }
-        } catch (e: IOException) {
-            LoadResult.Error(e)
         } catch (e: HttpException) {
+            return LoadResult.Error(e)
+        } catch (e: IOException) {
             return LoadResult.Error(e)
         }
     }
