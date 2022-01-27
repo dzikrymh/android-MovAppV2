@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import me.dzikry.movapp.data.models.Movie
 import me.dzikry.movapp.data.networks.MovieAPIs
 import me.dzikry.movapp.databinding.FragmentMovieByGenreBinding
+import me.dzikry.movapp.ui.home.HomeActivity
 import me.dzikry.movapp.ui.movie_by_genre.adapter.MovieByGenreAdapter
 import me.dzikry.movapp.utils.PagingLoadStateAdapter
 import me.dzikry.movapp.utils.SpacingItemDecoration
@@ -57,6 +58,7 @@ class MovieByGenreFragment : Fragment() {
             right = Tools.dpToPx(requireContext(), 16),
             bottom = 0
         )
+        HomeActivity.animate(true)
 
         return binding.root
     }

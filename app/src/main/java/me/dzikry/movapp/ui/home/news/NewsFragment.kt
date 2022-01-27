@@ -17,6 +17,7 @@ import me.dzikry.movapp.data.models.Article
 import me.dzikry.movapp.data.networks.NewsAPIs
 import me.dzikry.movapp.data.repositories.NewsRepository
 import me.dzikry.movapp.databinding.FragmentNewsBinding
+import me.dzikry.movapp.ui.home.HomeActivity
 import me.dzikry.movapp.ui.home.news.adapter.NewsAdapter
 import me.dzikry.movapp.ui.home.news.adapter.TrendingAdapter
 import me.dzikry.movapp.utils.Resource
@@ -66,6 +67,7 @@ class NewsFragment : Fragment() {
             right = Tools.dpToPx(requireContext(), 16),
             bottom = 0
         )
+        HomeActivity.animate(false)
 
         return binding.root
     }

@@ -218,10 +218,10 @@
         tools:visibility="visible"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_news_trending"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleTrending" />
+        app:layout_constraintTop_toBottomOf="@+id/titleTrending"
+        app:layout_constraintBottom_toTopOf="@+id/sizeBox"/>
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmerTrending"
@@ -262,5 +262,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/cardViewSearch"
         android:contentDescription="@string/menu" />
+
+    <View
+        android:id="@+id/sizeBox"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

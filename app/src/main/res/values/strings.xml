@@ -48,4 +48,5 @@
     <string name="date">Date</string>
     <string name="image_news">Image News</string>
     <string name="movie_not_found">Movie not found</string>
+    <string name="press_back_again">Tekan sekali lagi untuk keluar</string>
 </resources>

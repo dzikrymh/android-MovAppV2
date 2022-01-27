@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 import me.dzikry.movapp.data.models.Article
 import me.dzikry.movapp.data.networks.NewsAPIs
 import me.dzikry.movapp.databinding.FragmentSearchNewsBinding
+import me.dzikry.movapp.ui.home.HomeActivity
 import me.dzikry.movapp.ui.search.news.adapter.SearchNewsAdapter
 import me.dzikry.movapp.utils.PagingLoadStateAdapter
 import me.dzikry.movapp.utils.Tools
@@ -62,6 +63,7 @@ class SearchNewsFragment : Fragment() {
             right = Tools.dpToPx(requireContext(), 16),
             bottom = 0
         )
+        HomeActivity.animate(true)
 
         return binding.root
     }

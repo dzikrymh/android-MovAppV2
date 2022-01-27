@@ -18,6 +18,7 @@ import me.dzikry.movapp.data.repositories.AuthRepository
 import me.dzikry.movapp.databinding.FragmentProfileBinding
 import me.dzikry.movapp.ui.auth.AuthViewModel
 import me.dzikry.movapp.ui.auth.AuthViewModelFactory
+import me.dzikry.movapp.ui.home.HomeActivity
 import me.dzikry.movapp.utils.Const
 import me.dzikry.movapp.utils.Resource
 import me.dzikry.movapp.utils.Tools
@@ -60,6 +61,7 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
+        HomeActivity.animate(false)
         return binding.root
     }
 

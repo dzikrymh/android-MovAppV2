@@ -14,6 +14,7 @@ import me.dzikry.movapp.data.models.Movie
 import me.dzikry.movapp.data.networks.MovieAPIs
 import me.dzikry.movapp.data.repositories.MovieRepository
 import me.dzikry.movapp.databinding.FragmentMovieBinding
+import me.dzikry.movapp.ui.home.HomeActivity
 import me.dzikry.movapp.ui.home.movie.adapter.GenreAdapter
 import me.dzikry.movapp.ui.home.movie.adapter.MovieAdapter
 import me.dzikry.movapp.ui.home.movie.adapter.MovieMotionAdapter
@@ -73,6 +74,7 @@ class MovieFragment : Fragment() {
             right = Tools.dpToPx(requireContext(), 16),
             bottom = 0
         )
+        HomeActivity.animate(false)
 
         return binding.root
     }

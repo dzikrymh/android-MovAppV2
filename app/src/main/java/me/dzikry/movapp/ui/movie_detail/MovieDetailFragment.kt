@@ -23,6 +23,7 @@ import me.dzikry.movapp.data.models.Review
 import me.dzikry.movapp.data.networks.MovieAPIs
 import me.dzikry.movapp.data.repositories.MovieRepository
 import me.dzikry.movapp.databinding.FragmentMovieDetailBinding
+import me.dzikry.movapp.ui.home.HomeActivity
 import me.dzikry.movapp.ui.movie_detail.adapter.GenreAdapter
 import me.dzikry.movapp.ui.movie_detail.adapter.ReviewPagingAdapter
 import me.dzikry.movapp.utils.Const
@@ -64,6 +65,7 @@ class MovieDetailFragment : Fragment() {
     ): View? {
         binding = FragmentMovieDetailBinding.inflate(inflater, container, false)
         Tools.setStatusBarTransparent(requireActivity())
+        HomeActivity.animate(true)
         return binding.root
     }
 
