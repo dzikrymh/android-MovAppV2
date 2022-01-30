@@ -22,6 +22,7 @@ import me.dzikry.movapp.ui.home.HomeActivity
 import me.dzikry.movapp.utils.Const
 import me.dzikry.movapp.utils.Resource
 import me.dzikry.movapp.utils.Tools
+import me.dzikry.movapp.utils.Tools.Companion.saveToken
 import java.io.Serializable
 
 class RegisterFragment : Fragment() {
@@ -95,7 +96,7 @@ class RegisterFragment : Fragment() {
                     isLoading(false)
                     response.data?.let { user ->
                         viewModel.token.observe(viewLifecycleOwner, { token ->
-                            activity?.let { Tools.saveToken(it, token) }
+                            activity?.saveToken(token = token)
                             gotoHome(token, user)
                         })
                     }

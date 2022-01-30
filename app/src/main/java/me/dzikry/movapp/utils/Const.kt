@@ -3,7 +3,7 @@ package me.dzikry.movapp.utils
 class Const {
     companion object {
         /** API NEWS **/
-        const val BASE_URL_AUTH = "http://192.168.1.6:8000/api/"
+        const val BASE_URL_AUTH = "http://192.168.1.7:8000/api/"
 
         /** API NEWS **/
         const val BASE_URL_NEWS = "https://newsapi.org/v2/"
@@ -20,7 +20,7 @@ class Const {
         const val BASE_PATH_AVATAR = "https://secure.gravatar.com/avatar"
 
         /** KEY DATA **/
-        const val PREFERENCE_TOKEN = "preference_token"
+        const val PREFERENCE_TOKEN = "token"
         const val TOKEN = "extra_token"
         const val USER = "extra_user"
         const val MOVIE_ID = "extra_movie_id"

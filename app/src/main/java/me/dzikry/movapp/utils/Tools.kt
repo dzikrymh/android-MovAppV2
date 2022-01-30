@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import androidx.core.content.edit
 import me.dzikry.movapp.R
 import java.lang.Exception
 import kotlin.math.roundToInt
@@ -24,17 +25,25 @@ class Tools {
             inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
         }
 
-        fun saveToken(activity: Activity, token: String) {
-            val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-            with (sharedPref.edit()) {
+        fun Activity.saveToken(token: String) {
+            val sharedPref = getPreferences(Context.MODE_PRIVATE)
+            sharedPref.edit().apply {
                 putString(Const.PREFERENCE_TOKEN, token)
                 apply()
             }
         }
 
-        fun restoreToken(activity: Activity): String? {
-            val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-            return sharedPref.getString(Const.PREFERENCE_TOKEN, "")
+        fun Activity.revokeToken() {
+            val sharedPref = getPreferences(Context.MODE_PRIVATE)
+            sharedPref.edit().apply {
+                remove(Const.PREFERENCE_TOKEN)
+                apply()
+            }
+        }
+
+        fun Activity.restoreToken(): String? {
+            val sharedPref = getPreferences(Context.MODE_PRIVATE)
+            return sharedPref.getString(Const.PREFERENCE_TOKEN, null)
         }
 
         fun getGridSpanCountMovie(activity: Activity): Int {

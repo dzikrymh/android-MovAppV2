@@ -41,10 +41,7 @@ class AuthRepository(private val api: AuthAPIs) {
         if (response.isSuccessful) {
             return response.body()!!
         } else {
-            val gson = Gson()
-            val errorResponse: UserResponse =
-                gson.fromJson(response.errorBody()!!.charStream(), UserResponse::class.java)
-            throw IOException(errorResponse.meta.message)
+            throw IOException("Unauthenticated")
         }
     }
 

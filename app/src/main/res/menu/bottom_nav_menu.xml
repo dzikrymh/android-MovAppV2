@@ -3,14 +3,14 @@
 
     <item android:id="@+id/movieFragment"
         android:title="@string/movie"
-        android:icon="@drawable/ic_movie" />
+        android:icon="@drawable/ic_movie_selector" />
 
     <item android:id="@+id/newsFragment"
         android:title="@string/news"
-        android:icon="@drawable/ic_news" />
+        android:icon="@drawable/ic_news_selector" />
 
     <item android:id="@+id/profileFragment"
         android:title="@string/profile"
-        android:icon="@drawable/ic_account" />
+        android:icon="@drawable/ic_account_selector" />
 
 </menu>

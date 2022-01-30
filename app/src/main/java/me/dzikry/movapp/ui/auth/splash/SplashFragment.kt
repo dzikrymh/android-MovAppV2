@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +24,7 @@ import me.dzikry.movapp.ui.home.HomeActivity
 import me.dzikry.movapp.utils.Const
 import me.dzikry.movapp.utils.Resource
 import me.dzikry.movapp.utils.Tools
+import me.dzikry.movapp.utils.Tools.Companion.restoreToken
 import java.io.Serializable
 
 class SplashFragment : Fragment() {
@@ -32,6 +34,7 @@ class SplashFragment : Fragment() {
     }
 
     private lateinit var viewModel: AuthViewModel
+    private var token: String? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -46,25 +49,29 @@ class SplashFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         Tools.setStatusBarTransparent(requireActivity())
+
+        activity?.restoreToken()?.let {
+            token = it
+            Log.i("Splash_Screen","token=" + it)
+        }
+
         return inflater.inflate(R.layout.fragment_splash, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val token = Tools.restoreToken(requireActivity())
-
         if (token.isNullOrEmpty()) {
             Handler().postDelayed({
                 gotoLogin()
             }, 3000)
         } else {
-            viewModel.getUser(token = token)
+            viewModel.getUser(token = token!!)
             viewModel.user.observe(viewLifecycleOwner, { response ->
                 when (response) {
                     is Resource.Success -> {
                         response.data?.let { user ->
-                            gotoHome(token, user)
+                            gotoHome(token!!, user)
                         }
                     }
 
