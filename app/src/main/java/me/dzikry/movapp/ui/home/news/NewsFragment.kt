@@ -11,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
-import com.google.gson.Gson
 import me.dzikry.movapp.R
 import me.dzikry.movapp.data.models.Article
 import me.dzikry.movapp.data.networks.NewsAPIs

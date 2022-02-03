@@ -11,7 +11,6 @@ import me.dzikry.movapp.data.repositories.AuthRepository
 import me.dzikry.movapp.utils.Resource
 import java.io.IOException
 import java.lang.StringBuilder
-import kotlin.Exception
 
 class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
     private val _meta = MutableLiveData<Resource<Meta>>()

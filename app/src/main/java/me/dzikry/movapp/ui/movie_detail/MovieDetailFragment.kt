@@ -14,8 +14,6 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.dzikry.movapp.data.models.Genre
@@ -30,7 +28,6 @@ import me.dzikry.movapp.utils.Const
 import me.dzikry.movapp.utils.PagingLoadStateAdapter
 import me.dzikry.movapp.utils.Resource
 import me.dzikry.movapp.utils.Tools
-import java.text.SimpleDateFormat
 import kotlin.Exception
 
 class MovieDetailFragment : Fragment() {
@@ -81,29 +78,8 @@ class MovieDetailFragment : Fragment() {
                 is Resource.Success -> {
                     response.data?.let {
                         binding.apply {
-                            Glide.with(requireActivity())
-                                .load(Const.BASE_PATH_BACKDROP + it.backdropPath)
-                                .transform(CenterCrop())
-                                .into(movieBackdrop)
-
-                            Glide.with(requireActivity())
-                                .load(Const.BASE_PATH_POSTER + it.posterPath)
-                                .transform(CenterCrop())
-                                .into(moviePoster)
-
-                            movieTitle.text = it.title
-                            movieRating.rating = it.rating / 2
-                            try {
-                                val parser = SimpleDateFormat("yyyy-MM-dd")
-                                val formatter = SimpleDateFormat("dd MMMM yyyy")
-                                val dt = formatter.format(parser.parse(it.releaseDate)!!)
-                                movieReleaseDate.text = dt
-                            } catch (e: Exception) {
-                                movieReleaseDate.text = it.releaseDate
-                            }
-                            movieOverview.text = it.overview
-
-                            binding.genreMovie.apply {
+                            binding.movie = it
+                            genreMovie.apply {
                                 adapter = genreAdapter
                             }
                             genreAdapter.appendGenres(it.genres)

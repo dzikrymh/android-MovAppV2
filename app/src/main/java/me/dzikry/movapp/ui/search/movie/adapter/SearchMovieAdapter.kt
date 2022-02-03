@@ -5,11 +5,8 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import me.dzikry.movapp.data.models.Movie
 import me.dzikry.movapp.databinding.ItemMovieBinding
-import me.dzikry.movapp.utils.Const
 
 class SearchMovieAdapter(
     private val onMovieClick: (movie: Movie) -> Unit

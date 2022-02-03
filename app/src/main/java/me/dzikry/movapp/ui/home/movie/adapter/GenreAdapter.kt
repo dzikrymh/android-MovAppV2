@@ -5,12 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import me.dzikry.movapp.data.models.Genre
 import me.dzikry.movapp.databinding.ItemGenreMovieBinding
-import me.dzikry.movapp.databinding.ItemMovieBinding
-import me.dzikry.movapp.utils.Const
 
 class GenreAdapter(
     private val onGenreClick: (movie: Genre) -> Unit

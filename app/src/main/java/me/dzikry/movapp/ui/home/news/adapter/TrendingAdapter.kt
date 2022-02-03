@@ -6,14 +6,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import me.dzikry.movapp.R
 import me.dzikry.movapp.data.models.Article
 import me.dzikry.movapp.databinding.ItemNewsTrendingBinding
-import java.lang.Exception
-import java.text.SimpleDateFormat
-import java.util.*
 
 class TrendingAdapter(
     private val onNewsClick: (news: Article) -> Unit

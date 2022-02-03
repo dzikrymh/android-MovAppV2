@@ -23,7 +23,6 @@ import me.dzikry.movapp.utils.Const
 import me.dzikry.movapp.utils.Resource
 import me.dzikry.movapp.utils.Tools
 import me.dzikry.movapp.utils.Tools.Companion.saveToken
-import java.io.Serializable
 
 class RegisterFragment : Fragment() {
 
@@ -117,9 +116,12 @@ class RegisterFragment : Fragment() {
     }
 
     private fun gotoHome(token: String?, user: User) {
+        val gson = Gson()
+        val jsonUser: String = gson.toJson(user)
+
         val intent = Intent(context, HomeActivity::class.java)
         intent.putExtra(Const.TOKEN, token)
-        intent.putExtra(Const.USER, user)
+        intent.putExtra(Const.USER, jsonUser)
         startActivity(intent)
         activity?.finish()
     }

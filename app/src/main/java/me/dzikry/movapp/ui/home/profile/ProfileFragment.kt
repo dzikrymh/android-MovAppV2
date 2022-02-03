@@ -1,6 +1,5 @@
 package me.dzikry.movapp.ui.home.profile
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
@@ -11,10 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.google.gson.Gson
-import me.dzikry.movapp.R
 import me.dzikry.movapp.data.models.User
 import me.dzikry.movapp.data.networks.AuthAPIs
 import me.dzikry.movapp.data.repositories.AuthRepository
@@ -25,7 +21,6 @@ import me.dzikry.movapp.ui.auth.MainActivity
 import me.dzikry.movapp.ui.home.HomeActivity
 import me.dzikry.movapp.utils.Const
 import me.dzikry.movapp.utils.Resource
-import me.dzikry.movapp.utils.Tools
 import me.dzikry.movapp.utils.Tools.Companion.restoreToken
 import me.dzikry.movapp.utils.Tools.Companion.revokeToken
 
@@ -39,7 +34,7 @@ class ProfileFragment : Fragment() {
     private lateinit var authViewModel: AuthViewModel
     private lateinit var binding: FragmentProfileBinding
     private lateinit var token: String
-    private lateinit var user: User
+    private lateinit var mUser: User
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -47,17 +42,6 @@ class ProfileFragment : Fragment() {
         val repo = AuthRepository(api)
         val factory = AuthViewModelFactory(repo)
         authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
-
-        val bundle: Bundle? = activity?.intent?.extras
-        bundle?.let { bundle ->
-            bundle.apply {
-                token = getString(Const.TOKEN)!!
-                val jsonUser = getString(Const.USER)
-
-                val gson = Gson()
-                user = gson.fromJson(jsonUser, User::class.java)
-            }
-        }
     }
 
     override fun onCreateView(
@@ -74,14 +58,17 @@ class ProfileFragment : Fragment() {
         viewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
 
         binding.apply {
-            Glide.with(requireContext())
-                .load(user.profile_photo_url)
-                .transform(CenterCrop())
-                .into(image)
+            val bundle: Bundle? = activity?.intent?.extras
+            bundle?.let {
+                it.apply {
+                    token = getString(Const.TOKEN)!!
+                    val jsonUser = getString(Const.USER)
+                    val gson = Gson()
+                    mUser = gson.fromJson(jsonUser, User::class.java)
 
-            name.text = user.name
-            username.text = "@${user.username}"
-
+                    user = mUser
+                }
+            }
             logout.setOnClickListener {
                 actionLogout()
             }
@@ -90,13 +77,13 @@ class ProfileFragment : Fragment() {
 
     private fun actionLogout() {
         authViewModel.logout(token)
-        authViewModel.meta.observe(viewLifecycleOwner, { response ->
+        authViewModel.meta.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Success -> {
                     activity?.revokeToken()
 
                     val token = activity?.restoreToken()
-                    Log.i("Profile_Screen","token=" + token.toString())
+                    Log.i("Profile_Screen", "token=" + token.toString())
 
                     startActivity(Intent(context, MainActivity::class.java))
                     activity?.finish()
@@ -112,7 +99,7 @@ class ProfileFragment : Fragment() {
 
                 }
             }
-        })
+        }
     }
 
 }

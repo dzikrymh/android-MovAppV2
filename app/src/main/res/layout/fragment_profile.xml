@@ -1,95 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.home.profile.ProfileFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:elevation="3dp"
-        app:civ_border_color="?attr/colorOnPrimary"
-        app:civ_border_width="2dp"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintBottom_toTopOf="@+id/name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@tools:sample/avatars" />
-
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/poppins_semibold"
-        android:textColor="?attr/textPrimary"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/username"
-        app:layout_constraintEnd_toEndOf="@+id/image"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/image"
-        app:layout_constraintTop_toBottomOf="@+id/image"
-        tools:text="@tools:sample/full_names" />
-
-    <TextView
-        android:id="@+id/username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:fontFamily="@font/poppins"
-        android:textColor="?attr/textPrimary"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayoutBottom"
-        app:layout_constraintEnd_toEndOf="@+id/name"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/name"
-        app:layout_constraintTop_toBottomOf="@+id/name"
-        tools:text="@tools:sample/first_names" />
+    <data>
+        <variable
+            name="user"
+            type="me.dzikry.movapp.data.models.User" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayoutBottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_top_round"
-        android:backgroundTint="?attr/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:layout_height="match_parent"
+        tools:context=".ui.home.profile.ProfileFragment">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/logout"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_margin="16dp"
-            app:cardElevation="3dp"
-            app:cardCornerRadius="20dp"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:elevation="3dp"
+            loadUrl="@{user.profile_photo_url}"
+            app:civ_border_color="?attr/colorOnPrimary"
+            app:civ_border_width="2dp"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintBottom_toTopOf="@+id/name"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/sizeBox">
+            tools:src="@tools:sample/avatars" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_semibold"
-                android:textColor="?attr/textPrimary"
-                android:textSize="16sp"
-                android:text="@string/logout"
-                android:layout_gravity="center"/>
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/poppins_semibold"
+            android:textColor="?attr/textPrimary"
+            android:textSize="16sp"
+            android:text="@{user.name}"
+            app:layout_constraintBottom_toTopOf="@+id/username"
+            app:layout_constraintEnd_toEndOf="@+id/image"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/image"
+            app:layout_constraintTop_toBottomOf="@+id/image"
+            tools:text="@tools:sample/full_names" />
 
-        </androidx.cardview.widget.CardView>
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/poppins"
+            android:textColor="?attr/textPrimary"
+            android:textSize="14sp"
+            username="@{user.username}"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayoutBottom"
+            app:layout_constraintEnd_toEndOf="@+id/name"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/name"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            tools:text="@tools:sample/first_names" />
 
-        <View
-            android:id="@+id/sizeBox"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayoutBottom"
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:background="@color/transparent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_top_round"
+            android:backgroundTint="?attr/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/logout"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_margin="16dp"
+                app:cardElevation="3dp"
+                app:cardCornerRadius="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/sizeBox">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:textColor="?attr/textPrimary"
+                    android:textSize="16sp"
+                    android:text="@string/logout"
+                    android:layout_gravity="center"/>
+
+            </androidx.cardview.widget.CardView>
+
+            <View
+                android:id="@+id/sizeBox"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                android:background="@color/transparent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

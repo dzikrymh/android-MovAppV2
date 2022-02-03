@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.text.Html
 import android.widget.ImageView
+import android.widget.RatingBar
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
@@ -49,7 +50,7 @@ fun TextView.releaseMovie(release: String?) {
     if (release.isNullOrEmpty()) return
     text = try {
         val date = SimpleDateFormat("yyyy-MM-dd").parse(release)
-        SimpleDateFormat("dd MMM yyyy").format(date!!)
+        SimpleDateFormat("dd MMMM yyyy").format(date!!)
     } catch (e: Exception) {
         release
     }
@@ -120,4 +121,16 @@ fun TextView.html(content: String?) {
     } else {
         Html.fromHtml(content)
     }
+}
+
+@BindingAdapter("fillStar")
+fun RatingBar.fillStar(rate: Float?) {
+    rating = (rate?.div(2) ?: 0) as Float
+}
+
+@SuppressLint("SetTextI18n")
+@BindingAdapter("username")
+fun TextView.username(username: String?) {
+    if (username.isNullOrEmpty()) return
+    text = "@${username}"
 }

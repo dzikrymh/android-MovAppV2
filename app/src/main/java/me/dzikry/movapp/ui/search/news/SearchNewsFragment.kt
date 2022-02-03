@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.gson.Gson
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.dzikry.movapp.data.models.Article
