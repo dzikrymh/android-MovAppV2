@@ -1,18 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="@dimen/item_movie_width"
-    android:layout_height="@dimen/item_movie_height"
-    android:layout_marginEnd="8dp"
-    android:layout_marginBottom="4dp"
-    app:cardCornerRadius="@dimen/radius_card_movie">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:id="@+id/item_movie_poster"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        tools:src="@drawable/sample_movie" />
+    <data>
+        <variable
+            name="movie"
+            type="me.dzikry.movapp.data.models.Movie" />
 
-</androidx.cardview.widget.CardView>
+        <variable
+            name="constant"
+            type="me.dzikry.movapp.utils.Const" />
+
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="@dimen/item_movie_width"
+        android:layout_height="@dimen/item_movie_height"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="4dp"
+        app:cardCornerRadius="@dimen/radius_card_movie">
+
+        <ImageView
+            android:id="@+id/item_movie_poster"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            loadUrl="@{constant.BASE_PATH_POSTER + movie.posterPath}"
+            tools:src="@drawable/sample_movie" />
+
+    </androidx.cardview.widget.CardView>
+
+</layout>

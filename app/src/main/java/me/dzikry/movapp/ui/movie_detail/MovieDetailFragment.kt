@@ -76,7 +76,7 @@ class MovieDetailFragment : Fragment() {
         genreAdapter = GenreAdapter(mutableListOf()) { genre -> showMovieByGenre(genre) }
         reviewPagingAdapter = ReviewPagingAdapter { review -> showReviewDetail(review) }
 
-        viewModel.movie.observe(viewLifecycleOwner, { response ->
+        viewModel.movie.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Success -> {
                     response.data?.let {
@@ -119,10 +119,10 @@ class MovieDetailFragment : Fragment() {
 
                 }
             }
-        })
+        }
 
         binding.movieTrailer.setOnClickListener {
-            viewModel.trailer.observe(viewLifecycleOwner, { response ->
+            viewModel.trailer.observe(viewLifecycleOwner) { response ->
                 when (response) {
                     is Resource.Success -> {
                         binding.movieTrailer.visibility = View.VISIBLE
@@ -151,7 +151,7 @@ class MovieDetailFragment : Fragment() {
                         binding.movieTrailer.visibility = View.GONE
                     }
                 }
-            })
+            }
         }
 
         initReviewsSize()

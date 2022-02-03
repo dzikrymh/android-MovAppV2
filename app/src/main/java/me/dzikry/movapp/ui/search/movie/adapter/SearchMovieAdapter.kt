@@ -19,11 +19,7 @@ class SearchMovieAdapter(
 
     override fun onBindViewHolder(holder: SearchMovieAdapter.MovieViewHolder, position: Int) {
         getItem(position)?.let { movie ->
-            Glide.with(holder.itemView.context)
-                .load(Const.BASE_PATH_POSTER + movie.posterPath)
-                .transform(CenterCrop())
-                .into(holder.item.itemMoviePoster)
-
+            holder.item.movie = movie
             holder.itemView.setOnClickListener { onMovieClick.invoke(movie) }
         }
     }

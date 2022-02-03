@@ -87,7 +87,7 @@ class MovieFragment : Fragment() {
             findNavController().navigate(action)
         }
 
-        viewModel.upcoming.observe(viewLifecycleOwner, { response ->
+        viewModel.upcoming.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Success -> {
                     isLoadingUpcoming(false)
@@ -109,9 +109,9 @@ class MovieFragment : Fragment() {
                     isLoadingUpcoming(true)
                 }
             }
-        })
+        }
 
-        viewModel.genre.observe(viewLifecycleOwner, { response ->
+        viewModel.genre.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Success -> {
                     isLoadingGenre(false)
@@ -133,9 +133,9 @@ class MovieFragment : Fragment() {
                     isLoadingGenre(true)
                 }
             }
-        })
+        }
 
-        viewModel.popular.observe(viewLifecycleOwner, { response ->
+        viewModel.popular.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Success -> {
                     isLoadingPopular(false)
@@ -157,9 +157,9 @@ class MovieFragment : Fragment() {
                     isLoadingPopular(true)
                 }
             }
-        })
+        }
 
-        viewModel.topRated.observe(viewLifecycleOwner, { response ->
+        viewModel.topRated.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Success -> {
                     isLoadingTopRated(false)
@@ -181,7 +181,7 @@ class MovieFragment : Fragment() {
                     isLoadingTopRated(true)
                 }
             }
-        })
+        }
     }
 
     private fun showMovieByGenre(genre: Genre) {

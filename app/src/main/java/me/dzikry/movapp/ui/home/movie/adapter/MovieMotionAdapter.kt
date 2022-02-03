@@ -49,22 +49,7 @@ class MovieMotionAdapter(
     @SuppressLint("SimpleDateFormat")
     override fun onBindViewHolder(holder: MovieMotionViewHolder, position: Int) {
         val movie = differ.currentList[position]
-
-        holder.item.apply {
-            Glide.with(holder.itemView.context)
-                .load(Const.BASE_PATH_BACKDROP + movie.backdropPath)
-                .transform(CenterCrop())
-                .into(itemMoviePoster)
-
-            title.text = movie.title
-            try {
-                val date = SimpleDateFormat("yyyy-MM-dd").parse(movie.releaseDate)
-                release.text = SimpleDateFormat("dd MMM yyyy").format(date)
-            } catch (e: Exception) {
-                release.text = movie.releaseDate
-            }
-            rate.text = movie.rating.toString()
-        }
+        holder.item.movie = movie
         holder.itemView.setOnClickListener { onMovieClick.invoke(movie) }
     }
 

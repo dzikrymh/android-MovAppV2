@@ -1,9 +1,10 @@
 package me.dzikry.movapp.data.models
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.serialization.Serializable
+import kotlinx.parcelize.Parcelize
 
-@Serializable
+@Parcelize
 data class User(
     @SerializedName("id") val id: Int,
     @SerializedName("name") val name: String,
@@ -14,4 +15,4 @@ data class User(
     @SerializedName("profile_photo_url") val profile_photo_url: String,
     @SerializedName("created_at") val created_at: String,
     @SerializedName("updated_at") val updated_at: String,
-)
+): Parcelable

@@ -40,8 +40,7 @@ class GenreAdapter(
 
     override fun onBindViewHolder(holder: GenreViewHolder, position: Int) {
         val genre = differ.currentList[position]
-
-        holder.item.genre.text = genre.name
+        holder.item.genre = genre
         holder.itemView.setOnClickListener { onGenreClick.invoke(genre) }
     }
 

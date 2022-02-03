@@ -114,12 +114,12 @@ class NewsFragment : Fragment() {
 
     private fun getNewsCategory(category: String, page: Int) {
         viewModel.getHeadlinesNews(category, page)
-        viewModel.headlineNews.observe(viewLifecycleOwner, { response ->
+        viewModel.headlineNews.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Success -> {
                     isLoadingCategory(false)
                     response.data?.let {
-                        adapterCategory = NewsAdapter {news -> showNewsDetails(news)}
+                        adapterCategory = NewsAdapter { news -> showNewsDetails(news) }
                         binding.recyclerViewCategory.apply {
                             adapter = adapterCategory
                         }
@@ -136,7 +136,7 @@ class NewsFragment : Fragment() {
                     isLoadingCategory(true)
                 }
             }
-        })
+        }
     }
 
     private fun isLoadingCategory(bool: Boolean) {
@@ -148,12 +148,12 @@ class NewsFragment : Fragment() {
 
     private fun getNewsTrending(page: Int) {
         viewModel.getTrendingNews(page)
-        viewModel.trendingNews.observe(viewLifecycleOwner, { response ->
+        viewModel.trendingNews.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Success -> {
                     isLoadingTrending(false)
                     response.data?.let {
-                        adapterTrending = TrendingAdapter {news -> showNewsDetails(news)}
+                        adapterTrending = TrendingAdapter { news -> showNewsDetails(news) }
                         binding.recyclerViewTrending.apply {
                             adapter = adapterTrending
                         }
@@ -170,7 +170,7 @@ class NewsFragment : Fragment() {
                     isLoadingTrending(true)
                 }
             }
-        })
+        }
     }
 
     private fun isLoadingTrending(bool: Boolean) {

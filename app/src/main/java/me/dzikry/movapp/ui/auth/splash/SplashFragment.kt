@@ -13,7 +13,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
-import kotlinx.serialization.descriptors.StructureKind
 import me.dzikry.movapp.R
 import me.dzikry.movapp.data.models.User
 import me.dzikry.movapp.data.networks.AuthAPIs
@@ -25,7 +24,6 @@ import me.dzikry.movapp.utils.Const
 import me.dzikry.movapp.utils.Resource
 import me.dzikry.movapp.utils.Tools
 import me.dzikry.movapp.utils.Tools.Companion.restoreToken
-import java.io.Serializable
 
 class SplashFragment : Fragment() {
 
@@ -52,7 +50,7 @@ class SplashFragment : Fragment() {
 
         activity?.restoreToken()?.let {
             token = it
-            Log.i("Splash_Screen","token=" + it)
+            Log.i("Splash_Screen", "token=$it")
         }
 
         return inflater.inflate(R.layout.fragment_splash, container, false)
@@ -67,7 +65,7 @@ class SplashFragment : Fragment() {
             }, 3000)
         } else {
             viewModel.getUser(token = token!!)
-            viewModel.user.observe(viewLifecycleOwner, { response ->
+            viewModel.user.observe(viewLifecycleOwner) { response ->
                 when (response) {
                     is Resource.Success -> {
                         response.data?.let { user ->
@@ -89,7 +87,7 @@ class SplashFragment : Fragment() {
 
                     }
                 }
-            })
+            }
         }
     }
 
@@ -99,12 +97,9 @@ class SplashFragment : Fragment() {
     }
 
     private fun gotoHome(token: String, user: User) {
-        val gson = Gson()
-        val jsonUser: String = gson.toJson(user)
-
         val intent = Intent(context, HomeActivity::class.java)
         intent.putExtra(Const.TOKEN, token)
-        intent.putExtra(Const.USER, jsonUser)
+        intent.putExtra(Const.USER, user)
         startActivity(intent)
         activity?.finish()
     }

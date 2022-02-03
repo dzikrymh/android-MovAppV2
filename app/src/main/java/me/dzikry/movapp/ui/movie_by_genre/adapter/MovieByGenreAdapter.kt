@@ -19,12 +19,7 @@ class MovieByGenreAdapter(
 
     override fun onBindViewHolder(holder: MovieByGenreAdapter.MovieViewHolder, position: Int) {
         val movie = getItem(position)!!
-
-        Glide.with(holder.itemView.context)
-            .load(Const.BASE_PATH_POSTER + movie.posterPath)
-            .transform(CenterCrop())
-            .into(holder.item.itemMoviePoster)
-
+        holder.item.movie = movie
         holder.itemView.setOnClickListener { onMovieClick.invoke(movie) }
     }
 

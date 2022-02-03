@@ -24,26 +24,6 @@ class SearchNewsAdapter(
 
         fun bind(article: Article) {
             binding.news = article
-
-            Glide.with(itemView.context)
-                .load(article.urlToImage)
-                .transform(CenterCrop())
-                .into(binding.itemImage)
-
-            try {
-                val dateApiFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH)
-                val date = dateApiFormat.parse(article.publishedAt)
-
-                val dateView = SimpleDateFormat("MMM, dd yyyy", Locale.ENGLISH)
-
-                date?.let {
-                    binding.itemPublish.text = dateView.format(it).toString()
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                binding.itemPublish.text = article.publishedAt
-            }
-
             itemView.setOnClickListener { onNewsClick.invoke(article) }
         }
     }

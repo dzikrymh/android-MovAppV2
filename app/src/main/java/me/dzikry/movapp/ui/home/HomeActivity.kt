@@ -41,10 +41,7 @@ class HomeActivity : AppCompatActivity() {
         bundle?.let {
             it.apply {
                 token = getString(Const.TOKEN)!!
-                val jsonUser = getString(Const.USER)
-
-                val gson = Gson()
-                user = gson.fromJson(jsonUser, User::class.java)
+                user = getParcelable(Const.USER)!!
             }
         }
 

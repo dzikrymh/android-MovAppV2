@@ -75,15 +75,15 @@ class LoginFragment : Fragment() {
 
     private fun postLogin(email: String, password: String) {
         viewModel.login(email, password)
-        viewModel.user.observe(viewLifecycleOwner, { response ->
+        viewModel.user.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Success -> {
                     isLoading(false)
                     response.data?.let { user ->
-                        viewModel.token.observe(viewLifecycleOwner, { token ->
+                        viewModel.token.observe(viewLifecycleOwner) { token ->
                             activity?.saveToken(token = token)
                             gotoHome(token, user)
-                        })
+                        }
                     }
                 }
 
@@ -98,16 +98,13 @@ class LoginFragment : Fragment() {
                     isLoading(true)
                 }
             }
-        })
+        }
     }
 
     private fun gotoHome(token: String, user: User) {
-        val gson = Gson()
-        val jsonUser: String = gson.toJson(user)
-
         val intent = Intent(context, HomeActivity::class.java)
         intent.putExtra(Const.TOKEN, token)
-        intent.putExtra(Const.USER, jsonUser)
+        intent.putExtra(Const.USER, user)
         startActivity(intent)
         activity?.finish()
     }

@@ -49,26 +49,6 @@ class NewsAdapter(
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
         val article = differ.currentList[position]
         holder.item.news = article
-
-        Glide.with(holder.itemView.context)
-            .load(article.urlToImage)
-            .transform(CenterCrop())
-            .into(holder.item.itemImage)
-
-        try {
-            val dateApiFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH)
-            val date = dateApiFormat.parse(article.publishedAt)
-
-            val dateView = SimpleDateFormat("MMM, dd yyyy", Locale.ENGLISH)
-
-            date?.let {
-                holder.item.itemPublishAuthor.text = dateView.format(it).toString()
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            holder.item.itemPublishAuthor.text = article.publishedAt
-        }
-
         holder.itemView.setOnClickListener { onNewsClick.invoke(article) }
     }
 

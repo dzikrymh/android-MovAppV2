@@ -33,60 +33,7 @@ class ReviewPagingAdapter(
 
         @SuppressLint("SimpleDateFormat")
         fun bind(review: Review) {
-            review.author_details.photo?.let {
-                val url = StringBuilder(it)
-                if (url.indexOf("http") == -1) {
-                    url.insert(0, Const.BASE_PATH_AVATAR)
-                } else {
-                    url.deleteCharAt(0)
-                }
-                Glide.with(itemView.context)
-                    .load(url.toString())
-                    .transform(CenterCrop())
-                    .addListener(object : RequestListener<Drawable> {
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            binding.profileImage.setImageResource(R.drawable.ic_account)
-                            return false
-                        }
-
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return false
-                        }
-                    })
-                    .into(binding.profileImage)
-            }
-
-            binding.author.text = review.author
-            try {
-                val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-                val formatter = SimpleDateFormat("dd MMMM yyyy")
-                val dt = formatter.format(parser.parse(review.updated_at)!!)
-                binding.date.text = dt
-            } catch (e: Exception) {
-                binding.date.text = review.updated_at
-            }
-            if (review.author_details.rating != null) {
-                binding.reviewRate.text = review.author_details.rating.toString()
-            } else {
-                binding.reviewRate.text = "0.0"
-            }
-            binding.content.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                Html.fromHtml(review.content, Html.FROM_HTML_MODE_COMPACT)
-            } else {
-                Html.fromHtml(review.content)
-            }
-
+            binding.review = review
             itemView.setOnClickListener { onReviewClick.invoke(review) }
         }
     }
