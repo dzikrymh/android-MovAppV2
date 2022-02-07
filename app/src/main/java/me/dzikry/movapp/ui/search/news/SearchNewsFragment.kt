@@ -89,6 +89,8 @@ class SearchNewsFragment : Fragment() {
         view?.let { context?.hideKeyboard(it) }
         lifecycleScope.launch {
             viewModel.getSearchNews(keyword = keyword)
+        }
+        lifecycleScope.launch {
             viewModel.newsFlow.collectLatest {
                 mAdapter.submitData(it)
             }

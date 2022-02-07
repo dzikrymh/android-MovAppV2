@@ -77,6 +77,8 @@ class MovieByGenreFragment : Fragment() {
 
         lifecycleScope.launch {
             viewModel.getDiscoverMovieByGenre(args.genreId.toString())
+        }
+        lifecycleScope.launch {
             viewModel.movieFlow.collectLatest {
                 mAdapter.submitData(it)
             }

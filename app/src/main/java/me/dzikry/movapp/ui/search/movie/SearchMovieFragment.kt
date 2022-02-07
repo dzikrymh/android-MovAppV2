@@ -116,6 +116,8 @@ class SearchMovieFragment : Fragment() {
         view?.let { context?.hideKeyboard(it) }
         lifecycleScope.launch {
             viewModel.getSearchMovie(keyword)
+        }
+        lifecycleScope.launch {
             viewModel.movieFlow.collectLatest {
                 mAdapter.submitData(it)
             }

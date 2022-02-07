@@ -39,14 +39,6 @@ class MovieFragment : Fragment() {
     private var upcomingPage = 1
     private var topRatedPage = 1
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        viewModel.getUpcoming(upcomingPage)
-        viewModel.getGenre()
-        viewModel.getPopular(popularPage)
-        viewModel.getTopRated(topRatedPage)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -81,6 +73,7 @@ class MovieFragment : Fragment() {
             findNavController().navigate(action)
         }
 
+        viewModel.getUpcoming(upcomingPage)
         viewModel.upcoming.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Success -> {
@@ -105,6 +98,7 @@ class MovieFragment : Fragment() {
             }
         }
 
+        viewModel.getGenre()
         viewModel.genre.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Success -> {
@@ -129,6 +123,7 @@ class MovieFragment : Fragment() {
             }
         }
 
+        viewModel.getPopular(popularPage)
         viewModel.popular.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Success -> {
@@ -153,6 +148,7 @@ class MovieFragment : Fragment() {
             }
         }
 
+        viewModel.getTopRated(topRatedPage)
         viewModel.topRated.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Success -> {

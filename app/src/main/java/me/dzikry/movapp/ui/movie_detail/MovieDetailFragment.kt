@@ -44,12 +44,6 @@ class MovieDetailFragment : Fragment() {
 
     private val args: MovieDetailFragmentArgs by navArgs()
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        viewModel.getMovie(args.movieId.toString())
-        viewModel.getTrailer(args.movieId.toString())
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -67,6 +61,7 @@ class MovieDetailFragment : Fragment() {
         genreAdapter = GenreAdapter(mutableListOf()) { genre -> showMovieByGenre(genre) }
         reviewPagingAdapter = ReviewPagingAdapter { review -> showReviewDetail(review) }
 
+        viewModel.getMovie(args.movieId.toString())
         viewModel.movie.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Success -> {
@@ -91,6 +86,7 @@ class MovieDetailFragment : Fragment() {
             }
         }
 
+        viewModel.getTrailer(args.movieId.toString())
         binding.movieTrailer.setOnClickListener {
             viewModel.trailer.observe(viewLifecycleOwner) { response ->
                 when (response) {
@@ -133,6 +129,8 @@ class MovieDetailFragment : Fragment() {
         }
         lifecycleScope.launch {
             viewModel.getReviewPaging(args.movieId.toString())
+        }
+        lifecycleScope.launch {
             viewModel.reviewFlow.collectLatest {
                 reviewPagingAdapter.submitData(it)
             }
