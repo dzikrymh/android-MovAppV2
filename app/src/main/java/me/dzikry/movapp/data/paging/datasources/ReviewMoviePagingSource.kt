@@ -8,7 +8,7 @@ import me.dzikry.movapp.utils.Const
 import okio.IOException
 import retrofit2.HttpException
 
-class ReviewMoviePagingSource(private val movie_id: String) : PagingSource<Int, Review>() {
+class ReviewMoviePagingSource(private val api: MovieAPIs, private val movie_id: String) : PagingSource<Int, Review>() {
 
     override fun getRefreshKey(state: PagingState<Int, Review>): Int? {
         return state.anchorPosition
@@ -40,6 +40,5 @@ class ReviewMoviePagingSource(private val movie_id: String) : PagingSource<Int, 
 
     companion object {
         private const val FIRST_PAGE_INDEX = 1
-        private val api = MovieAPIs()
     }
 }

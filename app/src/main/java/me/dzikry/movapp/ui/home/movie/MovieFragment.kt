@@ -1,18 +1,17 @@
 package me.dzikry.movapp.ui.home.movie
 
 import android.content.Context
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import me.dzikry.movapp.data.models.Genre
 import me.dzikry.movapp.data.models.Movie
-import me.dzikry.movapp.data.networks.MovieAPIs
-import me.dzikry.movapp.data.repositories.MovieRepository
 import me.dzikry.movapp.databinding.FragmentMovieBinding
 import me.dzikry.movapp.ui.home.HomeActivity
 import me.dzikry.movapp.ui.home.movie.adapter.GenreAdapter
@@ -21,13 +20,14 @@ import me.dzikry.movapp.ui.home.movie.adapter.MovieMotionAdapter
 import me.dzikry.movapp.utils.Resource
 import me.dzikry.movapp.utils.Tools
 
+@AndroidEntryPoint
 class MovieFragment : Fragment() {
 
     companion object {
         fun newInstance() = MovieFragment()
     }
 
-    private lateinit var viewModel: MovieViewModel
+    private val viewModel: MovieViewModel by viewModels()
     private lateinit var binding: FragmentMovieBinding
 
     private lateinit var popularAdapter: MovieAdapter
@@ -41,12 +41,6 @@ class MovieFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-
-        val api = MovieAPIs()
-        val repo = MovieRepository(api)
-        val factory = MovieViewModelFactory(repo)
-        viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
-
         viewModel.getUpcoming(upcomingPage)
         viewModel.getGenre()
         viewModel.getPopular(popularPage)

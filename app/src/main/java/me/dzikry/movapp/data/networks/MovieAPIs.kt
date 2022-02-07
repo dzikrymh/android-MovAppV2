@@ -74,22 +74,4 @@ interface MovieAPIs {
         @Query("page") page: Int,
     ): Response<ReviewResponse>
 
-    companion object {
-        operator fun invoke() : MovieAPIs {
-            val logging = HttpLoggingInterceptor()
-            logging.level = HttpLoggingInterceptor.Level.BODY
-            val okHttpClient = OkHttpClient.Builder()
-                .addInterceptor(logging)
-                .readTimeout(90, TimeUnit.SECONDS)
-                .connectTimeout(90, TimeUnit.SECONDS)
-                .build()
-
-            return Retrofit.Builder()
-                .client(okHttpClient)
-                .baseUrl(Const.BASE_URL_MOVIE)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(MovieAPIs::class.java)
-        }
-    }
 }

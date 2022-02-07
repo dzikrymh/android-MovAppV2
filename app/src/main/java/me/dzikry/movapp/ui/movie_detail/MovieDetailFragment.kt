@@ -4,22 +4,21 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.dzikry.movapp.data.models.Genre
 import me.dzikry.movapp.data.models.Review
-import me.dzikry.movapp.data.networks.MovieAPIs
-import me.dzikry.movapp.data.repositories.MovieRepository
 import me.dzikry.movapp.databinding.FragmentMovieDetailBinding
 import me.dzikry.movapp.ui.home.HomeActivity
 import me.dzikry.movapp.ui.movie_detail.adapter.GenreAdapter
@@ -30,13 +29,14 @@ import me.dzikry.movapp.utils.Resource
 import me.dzikry.movapp.utils.Tools
 import kotlin.Exception
 
+@AndroidEntryPoint
 class MovieDetailFragment : Fragment() {
 
     companion object {
         fun newInstance() = MovieDetailFragment()
     }
 
-    private lateinit var viewModel: MovieDetailViewModel
+    private val viewModel: MovieDetailViewModel by viewModels()
     private lateinit var binding: FragmentMovieDetailBinding
 
     private lateinit var genreAdapter: GenreAdapter
@@ -46,12 +46,6 @@ class MovieDetailFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-
-        val api = MovieAPIs()
-        val repo = MovieRepository(api = api)
-        val factory = MovieDetailViewModelFactory(repo)
-        viewModel = ViewModelProvider(this, factory)[MovieDetailViewModel::class.java]
-
         viewModel.getMovie(args.movieId.toString())
         viewModel.getTrailer(args.movieId.toString())
     }
@@ -138,7 +132,8 @@ class MovieDetailFragment : Fragment() {
             )
         }
         lifecycleScope.launch {
-            viewModel.getReviewPaging(args.movieId.toString()).collectLatest {
+            viewModel.getReviewPaging(args.movieId.toString())
+            viewModel.reviewFlow.collectLatest {
                 reviewPagingAdapter.submitData(it)
             }
         }

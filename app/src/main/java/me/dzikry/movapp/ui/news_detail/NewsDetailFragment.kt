@@ -1,12 +1,12 @@
 package me.dzikry.movapp.ui.news_detail
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -25,7 +25,7 @@ class NewsDetailFragment : Fragment() {
         fun newInstance() = NewsDetailFragment()
     }
 
-    private lateinit var viewModel: NewsDetailViewModel
+    private val viewModel: NewsDetailViewModel by viewModels()
     private lateinit var binding: FragmentNewsDetailBinding
 
     private val args: NewsDetailFragmentArgs by navArgs()
@@ -40,7 +40,6 @@ class NewsDetailFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this)[NewsDetailViewModel::class.java]
 
         val gson = Gson()
         val article = gson.fromJson(args.jsonArticle, Article::class.java)

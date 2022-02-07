@@ -21,9 +21,11 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.transition.Transition
 import com.google.gson.Gson
+import dagger.hilt.android.AndroidEntryPoint
 import me.dzikry.movapp.data.models.User
 import me.dzikry.movapp.utils.Const
 
+@AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding

@@ -1,20 +1,19 @@
 package me.dzikry.movapp.ui.movie_by_genre
 
-import android.content.Context
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.dzikry.movapp.data.models.Movie
-import me.dzikry.movapp.data.networks.MovieAPIs
 import me.dzikry.movapp.databinding.FragmentMovieByGenreBinding
 import me.dzikry.movapp.ui.home.HomeActivity
 import me.dzikry.movapp.ui.movie_by_genre.adapter.MovieByGenreAdapter
@@ -22,26 +21,20 @@ import me.dzikry.movapp.utils.PagingLoadStateAdapter
 import me.dzikry.movapp.utils.SpacingItemDecoration
 import me.dzikry.movapp.utils.Tools
 
+@AndroidEntryPoint
 class MovieByGenreFragment : Fragment() {
 
     companion object {
         fun newInstance() = MovieByGenreFragment()
     }
 
-    private lateinit var viewModel: MovieByGenreViewModel
+    private val viewModel: MovieByGenreViewModel by viewModels()
     private lateinit var binding: FragmentMovieByGenreBinding
 
     private lateinit var mAdapter: MovieByGenreAdapter
     private lateinit var moviesLayoutMgr: StaggeredGridLayoutManager
 
     private val args: MovieByGenreFragmentArgs by navArgs()
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val api = MovieAPIs()
-        val factory = MovieByGenreViewModelFactory(api = api)
-        viewModel = ViewModelProvider(this, factory)[MovieByGenreViewModel::class.java]
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -83,7 +76,8 @@ class MovieByGenreFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-            viewModel.getDiscoverMovieByGenre(args.genreId.toString()).collectLatest {
+            viewModel.getDiscoverMovieByGenre(args.genreId.toString())
+            viewModel.movieFlow.collectLatest {
                 mAdapter.submitData(it)
             }
         }

@@ -4,8 +4,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import me.dzikry.movapp.data.repositories.AuthRepository
-import me.dzikry.movapp.data.repositories.AuthRepositoryImpl
+import me.dzikry.movapp.data.repositories.*
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -14,4 +13,14 @@ abstract class RepositoryModule {
     abstract fun bindAuthRepository(
         authRepositoryImpl: AuthRepositoryImpl
     ): AuthRepository
+
+    @Binds
+    abstract fun bindMovieRepository(
+        movieRepositoryImpl: MovieRepositoryImpl
+    ): MovieRepository
+
+    @Binds
+    abstract fun bindNewsRepository(
+        newsRepositoryImpl: NewsRepositoryImpl
+    ): NewsRepository
 }

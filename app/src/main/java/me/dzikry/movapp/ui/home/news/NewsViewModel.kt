@@ -4,13 +4,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import me.dzikry.movapp.data.models.Article
 import me.dzikry.movapp.data.repositories.NewsRepository
 import me.dzikry.movapp.utils.Resource
 import java.io.IOException
+import javax.inject.Inject
 
-class NewsViewModel(private val repository: NewsRepository) : ViewModel() {
+@HiltViewModel
+class NewsViewModel @Inject constructor(
+    private val repository: NewsRepository,
+) : ViewModel() {
     private val _headlineNews = MutableLiveData<Resource<List<Article>>>()
     private val _trendingNews = MutableLiveData<Resource<List<Article>>>()
     val headlineNews: LiveData<Resource<List<Article>>> get() = _headlineNews

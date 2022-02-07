@@ -1,21 +1,20 @@
 package me.dzikry.movapp.ui.search.news
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.dzikry.movapp.data.models.Article
-import me.dzikry.movapp.data.networks.NewsAPIs
 import me.dzikry.movapp.databinding.FragmentSearchNewsBinding
 import me.dzikry.movapp.ui.home.HomeActivity
 import me.dzikry.movapp.ui.search.news.adapter.SearchNewsAdapter
@@ -23,23 +22,17 @@ import me.dzikry.movapp.utils.PagingLoadStateAdapter
 import me.dzikry.movapp.utils.Tools
 import me.dzikry.movapp.utils.Tools.Companion.hideKeyboard
 
+@AndroidEntryPoint
 class SearchNewsFragment : Fragment() {
 
     companion object {
         fun newInstance() = SearchNewsFragment()
     }
 
-    private lateinit var viewModel: SearchNewsViewModel
+    private val viewModel: SearchNewsViewModel by viewModels()
     private lateinit var binding: FragmentSearchNewsBinding
 
     private lateinit var mAdapter: SearchNewsAdapter
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val api = NewsAPIs()
-        val factory = SearchNewsViewModelFactory(api = api)
-        viewModel = ViewModelProvider(this, factory)[SearchNewsViewModel::class.java]
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -95,7 +88,8 @@ class SearchNewsFragment : Fragment() {
     private fun searchNews(keyword: String) {
         view?.let { context?.hideKeyboard(it) }
         lifecycleScope.launch {
-            viewModel.getSearchNews(keyword = keyword).collectLatest {
+            viewModel.getSearchNews(keyword = keyword)
+            viewModel.newsFlow.collectLatest {
                 mAdapter.submitData(it)
             }
         }

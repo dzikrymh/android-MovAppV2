@@ -1,20 +1,18 @@
 package me.dzikry.movapp.ui.home.news
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import me.dzikry.movapp.R
 import me.dzikry.movapp.data.models.Article
-import me.dzikry.movapp.data.networks.NewsAPIs
-import me.dzikry.movapp.data.repositories.NewsRepository
 import me.dzikry.movapp.databinding.FragmentNewsBinding
 import me.dzikry.movapp.ui.home.HomeActivity
 import me.dzikry.movapp.ui.home.news.adapter.NewsAdapter
@@ -22,13 +20,14 @@ import me.dzikry.movapp.ui.home.news.adapter.TrendingAdapter
 import me.dzikry.movapp.utils.Resource
 import me.dzikry.movapp.utils.Tools
 
+@AndroidEntryPoint
 class NewsFragment : Fragment() {
 
     companion object {
         fun newInstance() = NewsFragment()
     }
 
-    private lateinit var viewModel: NewsViewModel
+    private val viewModel: NewsViewModel by viewModels()
     private lateinit var binding: FragmentNewsBinding
 
     private lateinit var adapterTrending: TrendingAdapter
@@ -36,14 +35,6 @@ class NewsFragment : Fragment() {
 
     private val newsCategoryPage = 1
     private val newsTrendingPage = 1
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val api = NewsAPIs()
-        val repository = NewsRepository(api)
-        val factory = NewsViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, factory)[NewsViewModel::class.java]
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

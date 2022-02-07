@@ -1,21 +1,20 @@
 package me.dzikry.movapp.ui.search.movie
 
-import android.content.Context
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.dzikry.movapp.data.models.Movie
-import me.dzikry.movapp.data.networks.MovieAPIs
 import me.dzikry.movapp.databinding.FragmentSearchMovieBinding
 import me.dzikry.movapp.ui.home.HomeActivity
 import me.dzikry.movapp.utils.PagingLoadStateAdapter
@@ -24,24 +23,18 @@ import me.dzikry.movapp.utils.SpacingItemDecoration
 import me.dzikry.movapp.utils.Tools
 import me.dzikry.movapp.utils.Tools.Companion.hideKeyboard
 
+@AndroidEntryPoint
 class SearchMovieFragment : Fragment() {
 
     companion object {
         fun newInstance() = SearchMovieFragment()
     }
 
-    private lateinit var viewModel: SearchMovieViewModel
+    private val viewModel: SearchMovieViewModel by viewModels()
     private lateinit var binding: FragmentSearchMovieBinding
 
     private lateinit var mAdapter: SearchMovieAdapter
     private lateinit var moviesLayoutMgr: StaggeredGridLayoutManager
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val api = MovieAPIs()
-        val factory = SearchMovieViewModelFactory(api = api)
-        viewModel = ViewModelProvider(this, factory)[SearchMovieViewModel::class.java]
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -122,7 +115,8 @@ class SearchMovieFragment : Fragment() {
     private fun searchMovie(keyword: String) {
         view?.let { context?.hideKeyboard(it) }
         lifecycleScope.launch {
-            viewModel.getSearchMovie(keyword).collectLatest {
+            viewModel.getSearchMovie(keyword)
+            viewModel.movieFlow.collectLatest {
                 mAdapter.submitData(it)
             }
         }

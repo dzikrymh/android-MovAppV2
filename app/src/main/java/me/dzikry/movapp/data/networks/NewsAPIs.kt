@@ -32,22 +32,4 @@ interface NewsAPIs {
         @Query("pageSize") pageSize: Int,
     ): Response<NewsResponse>
 
-    companion object {
-        operator fun invoke() : NewsAPIs {
-            val logging = HttpLoggingInterceptor()
-            logging.level = HttpLoggingInterceptor.Level.BODY
-            val okHttpClient = OkHttpClient.Builder()
-                .addInterceptor(logging)
-                .readTimeout(90, TimeUnit.SECONDS)
-                .connectTimeout(90, TimeUnit.SECONDS)
-                .build()
-
-            return Retrofit.Builder()
-                .client(okHttpClient)
-                .baseUrl(Const.BASE_URL_NEWS)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(NewsAPIs::class.java)
-        }
-    }
 }

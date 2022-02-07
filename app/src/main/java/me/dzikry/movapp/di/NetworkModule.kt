@@ -19,11 +19,26 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
+
 
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
+    @Inject
+    @Named("provideRetrofitAuth")
+    lateinit var retrofitAuth: Retrofit
+
+    @Inject
+    @Named("provideRetrofitMovie")
+    lateinit var retrofitMovie: Retrofit
+
+    @Inject
+    @Named("provideRetrofitNews")
+    lateinit var retrofitNews: Retrofit
+
     @Provides
     @Singleton
     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor =
@@ -44,6 +59,7 @@ class NetworkModule {
 
     @Provides
     @Singleton
+    @Named("provideRetrofitAuth")
     fun provideRetrofitAuth(gson: Gson, okHttpClient: OkHttpClient): Retrofit =
         Retrofit.Builder().apply {
             baseUrl(Const.BASE_URL_AUTH)
@@ -51,38 +67,40 @@ class NetworkModule {
             client(okHttpClient)
         }.build()
 
-//    @Provides
-//    @Singleton
-//    fun provideRetrofitMovie(gson: Gson, okHttpClient: OkHttpClient): Retrofit =
-//        Retrofit.Builder().apply {
-//            baseUrl(Const.BASE_URL_MOVIE)
-//            addConverterFactory(GsonConverterFactory.create(gson))
-//            client(okHttpClient)
-//        }.build()
-//
-//    @Provides
-//    @Singleton
-//    fun provideRetrofitNews(gson: Gson, okHttpClient: OkHttpClient): Retrofit =
-//        Retrofit.Builder().apply {
-//            baseUrl(Const.BASE_URL_NEWS)
-//            addConverterFactory(GsonConverterFactory.create(gson))
-//            client(okHttpClient)
-//        }.build()
+    @Provides
+    @Singleton
+    @Named("provideRetrofitMovie")
+    fun provideRetrofitMovie(gson: Gson, okHttpClient: OkHttpClient): Retrofit =
+        Retrofit.Builder().apply {
+            baseUrl(Const.BASE_URL_MOVIE)
+            addConverterFactory(GsonConverterFactory.create(gson))
+            client(okHttpClient)
+        }.build()
 
     @Provides
     @Singleton
-    fun provideAuthApi(retrofit: Retrofit): AuthAPIs =
+    @Named("provideRetrofitNews")
+    fun provideRetrofitNews(gson: Gson, okHttpClient: OkHttpClient): Retrofit =
+        Retrofit.Builder().apply {
+            baseUrl(Const.BASE_URL_NEWS)
+            addConverterFactory(GsonConverterFactory.create(gson))
+            client(okHttpClient)
+        }.build()
+
+    @Provides
+    @Singleton
+    fun provideAuthApi(@Named("provideRetrofitAuth") retrofit: Retrofit): AuthAPIs =
         retrofit.create(AuthAPIs::class.java)
 
-//    @Provides
-//    @Singleton
-//    fun provideMovieApi(retrofit: Retrofit): MovieAPIs =
-//        retrofit.create(MovieAPIs::class.java)
-//
-//    @Provides
-//    @Singleton
-//    fun provideNewsApi(retrofit: Retrofit): NewsAPIs =
-//        retrofit.create(NewsAPIs::class.java)
+    @Provides
+    @Singleton
+    fun provideMovieApi(@Named("provideRetrofitMovie") retrofit: Retrofit): MovieAPIs =
+        retrofit.create(MovieAPIs::class.java)
+
+    @Provides
+    @Singleton
+    fun provideNewsApi(@Named("provideRetrofitNews") retrofit: Retrofit): NewsAPIs =
+        retrofit.create(NewsAPIs::class.java)
 
     @Provides
     @Singleton

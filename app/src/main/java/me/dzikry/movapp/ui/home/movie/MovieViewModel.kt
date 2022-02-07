@@ -4,14 +4,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import me.dzikry.movapp.data.models.Genre
 import me.dzikry.movapp.data.models.Movie
 import me.dzikry.movapp.data.repositories.MovieRepository
 import me.dzikry.movapp.utils.Resource
 import okio.IOException
+import javax.inject.Inject
 
-class MovieViewModel(private val repository: MovieRepository) : ViewModel() {
+@HiltViewModel
+class MovieViewModel @Inject constructor(
+    private val repository: MovieRepository,
+) : ViewModel() {
     private val _popular = MutableLiveData<Resource<List<Movie>>>()
     private val _upcoming = MutableLiveData<Resource<List<Movie>>>()
     private val _topRated = MutableLiveData<Resource<List<Movie>>>()

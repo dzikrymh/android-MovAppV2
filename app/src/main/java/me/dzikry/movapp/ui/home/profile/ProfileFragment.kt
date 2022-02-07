@@ -1,7 +1,6 @@
 package me.dzikry.movapp.ui.home.profile
 
 import android.content.Intent
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import com.google.gson.Gson
+import dagger.hilt.android.AndroidEntryPoint
 import me.dzikry.movapp.data.models.User
 import me.dzikry.movapp.databinding.FragmentProfileBinding
 import me.dzikry.movapp.ui.auth.AuthViewModel
@@ -21,13 +21,14 @@ import me.dzikry.movapp.utils.Resource
 import me.dzikry.movapp.utils.Tools.Companion.restoreToken
 import me.dzikry.movapp.utils.Tools.Companion.revokeToken
 
+@AndroidEntryPoint
 class ProfileFragment : Fragment() {
 
     companion object {
         fun newInstance() = ProfileFragment()
     }
 
-    private lateinit var viewModel: ProfileViewModel
+    private val viewModel: ProfileViewModel by viewModels()
     private val authViewModel: AuthViewModel by viewModels()
     private lateinit var binding: FragmentProfileBinding
     private lateinit var token: String
@@ -44,8 +45,6 @@ class ProfileFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
-
         binding.apply {
             val bundle: Bundle? = activity?.intent?.extras
             bundle?.let {
