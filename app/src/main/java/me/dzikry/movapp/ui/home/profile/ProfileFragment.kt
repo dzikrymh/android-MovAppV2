@@ -1,6 +1,5 @@
 package me.dzikry.movapp.ui.home.profile
 
-import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -10,13 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import com.google.gson.Gson
 import me.dzikry.movapp.data.models.User
-import me.dzikry.movapp.data.networks.AuthAPIs
-import me.dzikry.movapp.data.repositories.AuthRepository
 import me.dzikry.movapp.databinding.FragmentProfileBinding
 import me.dzikry.movapp.ui.auth.AuthViewModel
-import me.dzikry.movapp.ui.auth.AuthViewModelFactory
 import me.dzikry.movapp.ui.auth.MainActivity
 import me.dzikry.movapp.ui.home.HomeActivity
 import me.dzikry.movapp.utils.Const
@@ -31,18 +28,10 @@ class ProfileFragment : Fragment() {
     }
 
     private lateinit var viewModel: ProfileViewModel
-    private lateinit var authViewModel: AuthViewModel
+    private val authViewModel: AuthViewModel by viewModels()
     private lateinit var binding: FragmentProfileBinding
     private lateinit var token: String
     private lateinit var mUser: User
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val api = AuthAPIs()
-        val repo = AuthRepository(api)
-        val factory = AuthViewModelFactory(repo)
-        authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

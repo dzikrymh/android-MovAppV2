@@ -43,23 +43,23 @@ interface AuthAPIs {
         @Header("Authorization") token: String
     ): Response<Meta>
 
-    companion object {
-        operator fun invoke() : AuthAPIs {
-            val logging = HttpLoggingInterceptor()
-            logging.level = HttpLoggingInterceptor.Level.BODY
-            val okHttpClient = OkHttpClient.Builder()
-                .addInterceptor(logging)
-                .readTimeout(90, TimeUnit.SECONDS)
-                .connectTimeout(90, TimeUnit.SECONDS)
-                .build()
-
-            return Retrofit.Builder()
-                .client(okHttpClient)
-                .baseUrl(Const.BASE_URL_AUTH)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(AuthAPIs::class.java)
-        }
-    }
+//    companion object {
+//        operator fun invoke() : AuthAPIs {
+//            val logging = HttpLoggingInterceptor()
+//            logging.level = HttpLoggingInterceptor.Level.BODY
+//            val okHttpClient = OkHttpClient.Builder()
+//                .addInterceptor(logging)
+//                .readTimeout(90, TimeUnit.SECONDS)
+//                .connectTimeout(90, TimeUnit.SECONDS)
+//                .build()
+//
+//            return Retrofit.Builder()
+//                .client(okHttpClient)
+//                .baseUrl(Const.BASE_URL_AUTH)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build()
+//                .create(AuthAPIs::class.java)
+//        }
+//    }
 
 }

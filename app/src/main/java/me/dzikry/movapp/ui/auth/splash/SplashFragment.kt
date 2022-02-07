@@ -1,8 +1,6 @@
 package me.dzikry.movapp.ui.auth.splash
 
-import android.content.Context
 import android.content.Intent
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -11,36 +9,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
+import dagger.hilt.android.AndroidEntryPoint
 import me.dzikry.movapp.R
 import me.dzikry.movapp.data.models.User
-import me.dzikry.movapp.data.networks.AuthAPIs
-import me.dzikry.movapp.data.repositories.AuthRepository
 import me.dzikry.movapp.ui.auth.AuthViewModel
-import me.dzikry.movapp.ui.auth.AuthViewModelFactory
 import me.dzikry.movapp.ui.home.HomeActivity
 import me.dzikry.movapp.utils.Const
 import me.dzikry.movapp.utils.Resource
 import me.dzikry.movapp.utils.Tools
 import me.dzikry.movapp.utils.Tools.Companion.restoreToken
 
+@AndroidEntryPoint
 class SplashFragment : Fragment() {
 
     companion object {
         fun newInstance() = SplashFragment()
     }
 
-    private lateinit var viewModel: AuthViewModel
+    private val viewModel: AuthViewModel by viewModels()
     private var token: String? = null
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val api = AuthAPIs()
-        val repo = AuthRepository(api)
-        val factory = AuthViewModelFactory(repo)
-        viewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

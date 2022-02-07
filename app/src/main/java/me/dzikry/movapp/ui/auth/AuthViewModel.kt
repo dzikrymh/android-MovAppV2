@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import me.dzikry.movapp.data.models.User
 import me.dzikry.movapp.data.models.response.Meta
@@ -11,8 +12,12 @@ import me.dzikry.movapp.data.repositories.AuthRepository
 import me.dzikry.movapp.utils.Resource
 import java.io.IOException
 import java.lang.StringBuilder
+import javax.inject.Inject
 
-class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
+@HiltViewModel
+class AuthViewModel @Inject constructor(
+    private val repository: AuthRepository,
+) : ViewModel() {
     private val _meta = MutableLiveData<Resource<Meta>>()
     private val _user = MutableLiveData<Resource<User>>()
     private val _token = MutableLiveData<String>()
