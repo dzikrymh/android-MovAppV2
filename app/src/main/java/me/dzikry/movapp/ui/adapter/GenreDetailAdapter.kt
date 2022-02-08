@@ -1,4 +1,4 @@
-package me.dzikry.movapp.ui.movie_detail.adapter
+package me.dzikry.movapp.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,11 +7,13 @@ import androidx.recyclerview.widget.RecyclerView
 import me.dzikry.movapp.R
 import me.dzikry.movapp.data.models.Genre
 import me.dzikry.movapp.databinding.ItemGenreDetailMovieBinding
+import javax.inject.Inject
 
-class GenreAdapter(
+class GenreDetailAdapter @Inject constructor(
     private var genres: MutableList<Genre>,
-    private val onGenreClick: (genre: Genre) -> Unit
-) : RecyclerView.Adapter<GenreAdapter.GenreViewHolder>() {
+) : RecyclerView.Adapter<GenreDetailAdapter.GenreViewHolder>() {
+
+    var genreDetailClickListener: GenreDetailClickListener? = null
 
     inner class GenreViewHolder(val item: ItemGenreDetailMovieBinding) : RecyclerView.ViewHolder(item.root)
 
@@ -30,7 +32,9 @@ class GenreAdapter(
     override fun onBindViewHolder(holder: GenreViewHolder, position: Int) {
         val genre = genres[position]
         holder.item.genre = genre
-        holder.itemView.setOnClickListener { onGenreClick.invoke(genre) }
+        holder.itemView.setOnClickListener {
+            genreDetailClickListener?.onGenreDetailClicked(holder.item, genre)
+        }
     }
 
     override fun getItemCount(): Int = genres.size
@@ -42,6 +46,10 @@ class GenreAdapter(
             genres.size - 1
         )
         notifyDataSetChanged()
+    }
+
+    interface GenreDetailClickListener {
+        fun onGenreDetailClicked(binding: ItemGenreDetailMovieBinding, genre: Genre)
     }
 
 }

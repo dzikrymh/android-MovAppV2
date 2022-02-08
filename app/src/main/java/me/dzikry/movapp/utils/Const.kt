@@ -3,7 +3,7 @@ package me.dzikry.movapp.utils
 class Const {
     companion object {
         /** API NEWS **/
-        const val BASE_URL_AUTH = "http://192.168.1.6:8000/api/"
+        const val BASE_URL_AUTH = "http://192.168.1.8:8000/api/"
 
         /** API NEWS **/
         const val BASE_URL_NEWS = "https://newsapi.org/v2/"

@@ -1,4 +1,4 @@
-package me.dzikry.movapp.ui.home.movie.adapter
+package me.dzikry.movapp.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,10 +7,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import me.dzikry.movapp.data.models.Movie
 import me.dzikry.movapp.databinding.ItemMovieBinding
+import javax.inject.Inject
 
-class MovieAdapter(
-    private val onMovieClick: (movie: Movie) -> Unit
-) : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>(){
+class MovieAdapter @Inject constructor() : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>(){
+
+    var movieClickListener: MovieClickListener? = null
 
     inner class MovieViewHolder(val item : ItemMovieBinding): RecyclerView.ViewHolder(item.root)
 
@@ -37,7 +38,12 @@ class MovieAdapter(
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         val movie = differ.currentList[position]
         holder.item.movie = movie
-        holder.itemView.setOnClickListener { onMovieClick.invoke(movie) }
+        holder.itemView.setOnClickListener {
+            movieClickListener?.onMovieClicked(holder.item, movie)
+        }
     }
 
+    interface MovieClickListener {
+        fun onMovieClicked(binding: ItemMovieBinding, movie: Movie)
+    }
 }

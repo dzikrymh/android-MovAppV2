@@ -1,6 +1,5 @@
-package me.dzikry.movapp.ui.home.movie.adapter
+package me.dzikry.movapp.ui.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -8,10 +7,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import me.dzikry.movapp.data.models.Movie
 import me.dzikry.movapp.databinding.ItemMotionMovieBinding
+import javax.inject.Inject
 
-class MovieMotionAdapter(
-    private val onMovieClick: (movie: Movie) -> Unit
-) : RecyclerView.Adapter<MovieMotionAdapter.MovieMotionViewHolder>(){
+class MovieMotionAdapter @Inject constructor() : RecyclerView.Adapter<MovieMotionAdapter.MovieMotionViewHolder>(){
+
+    var movieMotionClickListener: MovieMotionClickListener? = null
 
     inner class MovieMotionViewHolder(val item : ItemMotionMovieBinding): RecyclerView.ViewHolder(item.root)
 
@@ -39,11 +39,15 @@ class MovieMotionAdapter(
 
     override fun getItemCount(): Int = differ.currentList.size
 
-    @SuppressLint("SimpleDateFormat")
     override fun onBindViewHolder(holder: MovieMotionViewHolder, position: Int) {
         val movie = differ.currentList[position]
         holder.item.movie = movie
-        holder.itemView.setOnClickListener { onMovieClick.invoke(movie) }
+        holder.itemView.setOnClickListener {
+            movieMotionClickListener?.onMovieMotionClicked(holder.item, movie)
+        }
     }
 
+    interface MovieMotionClickListener {
+        fun onMovieMotionClicked(binding: ItemMotionMovieBinding, movie: Movie)
+    }
 }

@@ -1,6 +1,5 @@
 package me.dzikry.movapp.ui.home.movie
 
-import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,15 +12,20 @@ import dagger.hilt.android.AndroidEntryPoint
 import me.dzikry.movapp.data.models.Genre
 import me.dzikry.movapp.data.models.Movie
 import me.dzikry.movapp.databinding.FragmentMovieBinding
+import me.dzikry.movapp.databinding.ItemGenreMovieBinding
+import me.dzikry.movapp.databinding.ItemMotionMovieBinding
+import me.dzikry.movapp.databinding.ItemMovieBinding
 import me.dzikry.movapp.ui.home.HomeActivity
-import me.dzikry.movapp.ui.home.movie.adapter.GenreAdapter
-import me.dzikry.movapp.ui.home.movie.adapter.MovieAdapter
-import me.dzikry.movapp.ui.home.movie.adapter.MovieMotionAdapter
+import me.dzikry.movapp.ui.adapter.GenreAdapter
+import me.dzikry.movapp.ui.adapter.MovieAdapter
+import me.dzikry.movapp.ui.adapter.MovieMotionAdapter
 import me.dzikry.movapp.utils.Resource
 import me.dzikry.movapp.utils.Tools
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class MovieFragment : Fragment() {
+class MovieFragment : Fragment(), MovieAdapter.MovieClickListener,
+    MovieMotionAdapter.MovieMotionClickListener, GenreAdapter.GenreClickListener {
 
     companion object {
         fun newInstance() = MovieFragment()
@@ -30,10 +34,10 @@ class MovieFragment : Fragment() {
     private val viewModel: MovieViewModel by viewModels()
     private lateinit var binding: FragmentMovieBinding
 
-    private lateinit var popularAdapter: MovieAdapter
-    private lateinit var topRatedAdapter: MovieAdapter
-    private lateinit var upcomingAdapter: MovieMotionAdapter
-    private lateinit var genreAdapter: GenreAdapter
+    @Inject lateinit var popularAdapter: MovieAdapter
+    @Inject lateinit var topRatedAdapter: MovieAdapter
+    @Inject lateinit var upcomingAdapter: MovieMotionAdapter
+    @Inject lateinit var genreAdapter: GenreAdapter
 
     private var popularPage = 1
     private var upcomingPage = 1
@@ -79,11 +83,13 @@ class MovieFragment : Fragment() {
                 is Resource.Success -> {
                     isLoadingUpcoming(false)
                     response.data?.let {
-                        upcomingAdapter = MovieMotionAdapter { movie -> showMovieDetail(movie) }
-                        binding.motionUpcoming.apply {
-                            adapter = upcomingAdapter
+                        with(upcomingAdapter) {
+                            binding.motionUpcoming.apply {
+                                adapter = this@with
+                            }
+                            differ.submitList(it)
+                            movieMotionClickListener = this@MovieFragment
                         }
-                        upcomingAdapter.differ.submitList(it)
                     }
                 }
                 is Resource.Error -> {
@@ -104,11 +110,13 @@ class MovieFragment : Fragment() {
                 is Resource.Success -> {
                     isLoadingGenre(false)
                     response.data?.let {
-                        genreAdapter = GenreAdapter { genre -> showMovieByGenre(genre) }
-                        binding.genreMovies.apply {
-                            adapter = genreAdapter
+                        with(genreAdapter) {
+                            binding.genreMovies.apply {
+                                adapter = this@with
+                            }
+                            differ.submitList(it)
+                            genreClickListener = this@MovieFragment
                         }
-                        genreAdapter.differ.submitList(it)
                     }
                 }
                 is Resource.Error -> {
@@ -129,11 +137,13 @@ class MovieFragment : Fragment() {
                 is Resource.Success -> {
                     isLoadingPopular(false)
                     response.data?.let {
-                        popularAdapter = MovieAdapter { movie -> showMovieDetail(movie) }
-                        binding.popularMovies.apply {
-                            adapter = popularAdapter
+                        with(popularAdapter) {
+                            binding.popularMovies.apply {
+                                adapter = this@with
+                            }
+                            differ.submitList(it)
+                            movieClickListener = this@MovieFragment
                         }
-                        popularAdapter.differ.submitList(it)
                     }
                 }
                 is Resource.Error -> {
@@ -154,11 +164,13 @@ class MovieFragment : Fragment() {
                 is Resource.Success -> {
                     isLoadingTopRated(false)
                     response.data?.let {
-                        topRatedAdapter = MovieAdapter { movie -> showMovieDetail(movie) }
-                        binding.topRatedMovies.apply {
-                            adapter = topRatedAdapter
+                        with(topRatedAdapter) {
+                            binding.topRatedMovies.apply {
+                                adapter = this@with
+                            }
+                            differ.submitList(it)
+                            movieClickListener = this@MovieFragment
                         }
-                        topRatedAdapter.differ.submitList(it)
                     }
                 }
                 is Resource.Error -> {
@@ -172,6 +184,18 @@ class MovieFragment : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onMovieClicked(binding: ItemMovieBinding, movie: Movie) {
+        showMovieDetail(movie)
+    }
+
+    override fun onMovieMotionClicked(binding: ItemMotionMovieBinding, movie: Movie) {
+        showMovieDetail(movie)
+    }
+
+    override fun onGenreClicked(binding: ItemGenreMovieBinding, genre: Genre) {
+        showMovieByGenre(genre)
     }
 
     private fun showMovieByGenre(genre: Genre) {

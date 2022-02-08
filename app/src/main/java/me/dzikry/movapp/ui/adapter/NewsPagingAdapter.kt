@@ -1,4 +1,4 @@
-package me.dzikry.movapp.ui.search.news.adapter
+package me.dzikry.movapp.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,17 +9,22 @@ import androidx.recyclerview.widget.RecyclerView
 import me.dzikry.movapp.R
 import me.dzikry.movapp.data.models.Article
 import me.dzikry.movapp.databinding.ItemNewsTrendingBinding
+import javax.inject.Inject
 
-class SearchNewsAdapter(
-    private val onNewsClick: (article: Article) -> Unit
-) : PagingDataAdapter<Article, SearchNewsAdapter.NewsViewHolder>(DiffUtilCallBack()) {
+class NewsPagingAdapter @Inject constructor() : PagingDataAdapter<Article, NewsPagingAdapter.NewsViewHolder>(
+    DiffUtilCallBack()
+) {
+
+    var newsClickListener: NewsClickListener? = null
 
     inner class NewsViewHolder(val item : ItemNewsTrendingBinding): RecyclerView.ViewHolder(item.root) {
         private val binding = item
 
         fun bind(article: Article) {
             binding.news = article
-            itemView.setOnClickListener { onNewsClick.invoke(article) }
+            itemView.setOnClickListener {
+                newsClickListener?.onNewsClicked(binding, article)
+            }
         }
     }
 
@@ -50,5 +55,9 @@ class SearchNewsAdapter(
         override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean {
             return oldItem == newItem
         }
+    }
+
+    interface NewsClickListener {
+        fun onNewsClicked(binding: ItemNewsTrendingBinding, article: Article)
     }
 }

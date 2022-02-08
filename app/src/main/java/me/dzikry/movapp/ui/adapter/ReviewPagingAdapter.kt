@@ -1,4 +1,4 @@
-package me.dzikry.movapp.ui.movie_detail.adapter
+package me.dzikry.movapp.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,10 +7,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import me.dzikry.movapp.data.models.Review
 import me.dzikry.movapp.databinding.ItemReviewMovieBinding
+import javax.inject.Inject
 
-class ReviewPagingAdapter(
-    private val onReviewClick: (review: Review) -> Unit
-) : PagingDataAdapter<Review, ReviewPagingAdapter.ReviewViewHolder>(DiffUtilCallBack()) {
+class ReviewPagingAdapter @Inject constructor() : PagingDataAdapter<Review, ReviewPagingAdapter.ReviewViewHolder>(
+    DiffUtilCallBack()
+) {
+
+    var reviewClickListener: ReviewClickListener? = null
 
     inner class ReviewViewHolder(val item : ItemReviewMovieBinding): RecyclerView.ViewHolder(item.root) {
 
@@ -18,7 +21,9 @@ class ReviewPagingAdapter(
 
         fun bind(review: Review) {
             binding.review = review
-            itemView.setOnClickListener { onReviewClick.invoke(review) }
+            itemView.setOnClickListener {
+                reviewClickListener?.onReviewClicked(binding, review)
+            }
         }
     }
 
@@ -41,5 +46,9 @@ class ReviewPagingAdapter(
         override fun areContentsTheSame(oldItem: Review, newItem: Review): Boolean {
             return oldItem == newItem
         }
+    }
+
+    interface ReviewClickListener {
+        fun onReviewClicked(binding: ItemReviewMovieBinding, review: Review)
     }
 }

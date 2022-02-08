@@ -1,4 +1,4 @@
-package me.dzikry.movapp.ui.home.news.adapter
+package me.dzikry.movapp.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,13 +8,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import me.dzikry.movapp.R
 import me.dzikry.movapp.data.models.Article
-import me.dzikry.movapp.databinding.ItemNewsCategoryBinding
+import me.dzikry.movapp.databinding.ItemNewsTrendingBinding
+import javax.inject.Inject
 
-class NewsAdapter(
-    private val onNewsClick: (news: Article) -> Unit
-) : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>(){
+class TrendingAdapter @Inject constructor() : RecyclerView.Adapter<TrendingAdapter.ArticleViewHolder>(){
 
-    inner class ArticleViewHolder(val item : ItemNewsCategoryBinding): RecyclerView.ViewHolder(item.root)
+    var trendingClickListener: TrendingClickListener? = null
+
+    inner class ArticleViewHolder(val item : ItemNewsTrendingBinding): RecyclerView.ViewHolder(item.root)
 
     private val differCallback = object : DiffUtil.ItemCallback<Article>(){
         override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
@@ -32,7 +33,7 @@ class NewsAdapter(
         return  ArticleViewHolder(
             DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
-                R.layout.item_news_category,
+                R.layout.item_news_trending,
                 parent,
                 false
             )
@@ -44,7 +45,12 @@ class NewsAdapter(
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
         val article = differ.currentList[position]
         holder.item.news = article
-        holder.itemView.setOnClickListener { onNewsClick.invoke(article) }
+        holder.itemView.setOnClickListener {
+            trendingClickListener?.onTrendingClicked(holder.item, article)
+        }
     }
 
+    interface TrendingClickListener {
+        fun onTrendingClicked(binding: ItemNewsTrendingBinding, article: Article)
+    }
 }

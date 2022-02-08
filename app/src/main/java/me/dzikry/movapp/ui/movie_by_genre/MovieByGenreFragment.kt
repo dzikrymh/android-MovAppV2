@@ -15,14 +15,16 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.dzikry.movapp.data.models.Movie
 import me.dzikry.movapp.databinding.FragmentMovieByGenreBinding
+import me.dzikry.movapp.databinding.ItemMovieBinding
 import me.dzikry.movapp.ui.home.HomeActivity
-import me.dzikry.movapp.ui.movie_by_genre.adapter.MovieByGenreAdapter
+import me.dzikry.movapp.ui.adapter.MoviePagingAdapter
 import me.dzikry.movapp.utils.PagingLoadStateAdapter
 import me.dzikry.movapp.utils.SpacingItemDecoration
 import me.dzikry.movapp.utils.Tools
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class MovieByGenreFragment : Fragment() {
+class MovieByGenreFragment : Fragment(), MoviePagingAdapter.MovieClickListener {
 
     companion object {
         fun newInstance() = MovieByGenreFragment()
@@ -31,7 +33,7 @@ class MovieByGenreFragment : Fragment() {
     private val viewModel: MovieByGenreViewModel by viewModels()
     private lateinit var binding: FragmentMovieByGenreBinding
 
-    private lateinit var mAdapter: MovieByGenreAdapter
+    @Inject lateinit var mAdapter: MoviePagingAdapter
     private lateinit var moviesLayoutMgr: StaggeredGridLayoutManager
 
     private val args: MovieByGenreFragmentArgs by navArgs()
@@ -62,17 +64,17 @@ class MovieByGenreFragment : Fragment() {
             Tools.getGridSpanCountMovie(requireActivity()),
             StaggeredGridLayoutManager.VERTICAL
         )
-        mAdapter = MovieByGenreAdapter { movie -> showDetailMovie(movie) }
-        binding.apply {
-            discoverMovies.layoutManager = StaggeredGridLayoutManager(Tools.getGridSpanCountMovie(requireActivity()), StaggeredGridLayoutManager.VERTICAL)
-            val decoration = SpacingItemDecoration(Tools.getGridSpanCountMovie(requireActivity()), Tools.dpToPx(requireContext(), 2), false)
-            discoverMovies.addItemDecoration(decoration)
-            mAdapter.apply {
+        with(mAdapter) {
+            binding.apply {
+                discoverMovies.layoutManager = StaggeredGridLayoutManager(Tools.getGridSpanCountMovie(requireActivity()), StaggeredGridLayoutManager.VERTICAL)
+                val decoration = SpacingItemDecoration(Tools.getGridSpanCountMovie(requireActivity()), Tools.dpToPx(requireContext(), 2), false)
+                discoverMovies.addItemDecoration(decoration)
                 discoverMovies.adapter = withLoadStateHeaderAndFooter(
-                    header = PagingLoadStateAdapter(this),
-                    footer = PagingLoadStateAdapter(this)
+                    header = PagingLoadStateAdapter(this@with),
+                    footer = PagingLoadStateAdapter(this@with)
                 )
             }
+            movieClickListener = this@MovieByGenreFragment
         }
 
         lifecycleScope.launch {
@@ -89,6 +91,10 @@ class MovieByGenreFragment : Fragment() {
     private fun showDetailMovie(movie: Movie) {
         val action = MovieByGenreFragmentDirections.actionMovieByGenreFragmentToMovieDetailFragment(movie.id)
         findNavController().navigate(action)
+    }
+
+    override fun onMovieClicked(binding: ItemMovieBinding, movie: Movie) {
+        showDetailMovie(movie)
     }
 
 }

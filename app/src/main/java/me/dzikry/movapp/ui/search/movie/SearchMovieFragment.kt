@@ -16,15 +16,17 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.dzikry.movapp.data.models.Movie
 import me.dzikry.movapp.databinding.FragmentSearchMovieBinding
+import me.dzikry.movapp.databinding.ItemMovieBinding
+import me.dzikry.movapp.ui.adapter.MoviePagingAdapter
 import me.dzikry.movapp.ui.home.HomeActivity
 import me.dzikry.movapp.utils.PagingLoadStateAdapter
-import me.dzikry.movapp.ui.search.movie.adapter.SearchMovieAdapter
 import me.dzikry.movapp.utils.SpacingItemDecoration
 import me.dzikry.movapp.utils.Tools
 import me.dzikry.movapp.utils.Tools.Companion.hideKeyboard
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class SearchMovieFragment : Fragment() {
+class SearchMovieFragment : Fragment(), MoviePagingAdapter.MovieClickListener {
 
     companion object {
         fun newInstance() = SearchMovieFragment()
@@ -33,7 +35,7 @@ class SearchMovieFragment : Fragment() {
     private val viewModel: SearchMovieViewModel by viewModels()
     private lateinit var binding: FragmentSearchMovieBinding
 
-    private lateinit var mAdapter: SearchMovieAdapter
+    @Inject lateinit var mAdapter: MoviePagingAdapter
     private lateinit var moviesLayoutMgr: StaggeredGridLayoutManager
 
     override fun onCreateView(
@@ -69,7 +71,7 @@ class SearchMovieFragment : Fragment() {
             Tools.getGridSpanCountMovie(requireActivity()),
             StaggeredGridLayoutManager.VERTICAL
         )
-        mAdapter = SearchMovieAdapter { movie -> showDetailMovie(movie) }
+
         binding.apply {
             recyclerViewSearch.layoutManager = StaggeredGridLayoutManager(Tools.getGridSpanCountMovie(requireActivity()), StaggeredGridLayoutManager.VERTICAL)
             val decoration = SpacingItemDecoration(Tools.getGridSpanCountMovie(requireActivity()), Tools.dpToPx(requireContext(), 2), false)
@@ -87,10 +89,11 @@ class SearchMovieFragment : Fragment() {
                     }
                     if (loadState.refresh is LoadState.NotLoading &&
                         loadState.append.endOfPaginationReached &&
-                        mAdapter.itemCount < 1) {
+                        itemCount < 1) {
                         binding.movieNotFound.visibility = View.VISIBLE
                     }
                 }
+                movieClickListener = this@SearchMovieFragment
             }
 
             back.setOnClickListener {
@@ -127,6 +130,10 @@ class SearchMovieFragment : Fragment() {
     private fun showDetailMovie(movie: Movie) {
         val action = SearchMovieFragmentDirections.actionSearchMovieFragmentToMovieDetailFragment(movie.id)
         findNavController().navigate(action)
+    }
+
+    override fun onMovieClicked(binding: ItemMovieBinding, movie: Movie) {
+        showDetailMovie(movie)
     }
 
 }

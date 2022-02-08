@@ -1,7 +1,5 @@
 package me.dzikry.movapp.ui.movie_detail
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -20,17 +18,21 @@ import kotlinx.coroutines.launch
 import me.dzikry.movapp.data.models.Genre
 import me.dzikry.movapp.data.models.Review
 import me.dzikry.movapp.databinding.FragmentMovieDetailBinding
+import me.dzikry.movapp.databinding.ItemGenreDetailMovieBinding
+import me.dzikry.movapp.databinding.ItemReviewMovieBinding
 import me.dzikry.movapp.ui.home.HomeActivity
-import me.dzikry.movapp.ui.movie_detail.adapter.GenreAdapter
-import me.dzikry.movapp.ui.movie_detail.adapter.ReviewPagingAdapter
+import me.dzikry.movapp.ui.adapter.GenreDetailAdapter
+import me.dzikry.movapp.ui.adapter.ReviewPagingAdapter
 import me.dzikry.movapp.utils.Const
 import me.dzikry.movapp.utils.PagingLoadStateAdapter
 import me.dzikry.movapp.utils.Resource
 import me.dzikry.movapp.utils.Tools
+import javax.inject.Inject
 import kotlin.Exception
 
 @AndroidEntryPoint
-class MovieDetailFragment : Fragment() {
+class MovieDetailFragment : Fragment(), GenreDetailAdapter.GenreDetailClickListener,
+    ReviewPagingAdapter.ReviewClickListener {
 
     companion object {
         fun newInstance() = MovieDetailFragment()
@@ -39,8 +41,8 @@ class MovieDetailFragment : Fragment() {
     private val viewModel: MovieDetailViewModel by viewModels()
     private lateinit var binding: FragmentMovieDetailBinding
 
-    private lateinit var genreAdapter: GenreAdapter
-    private lateinit var reviewPagingAdapter: ReviewPagingAdapter
+    @Inject lateinit var genreDetailAdapter: GenreDetailAdapter
+    @Inject lateinit var reviewPagingAdapter: ReviewPagingAdapter
 
     private val args: MovieDetailFragmentArgs by navArgs()
 
@@ -54,24 +56,23 @@ class MovieDetailFragment : Fragment() {
         return binding.root
     }
 
-    @SuppressLint("SimpleDateFormat")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        genreAdapter = GenreAdapter(mutableListOf()) { genre -> showMovieByGenre(genre) }
-        reviewPagingAdapter = ReviewPagingAdapter { review -> showReviewDetail(review) }
 
         viewModel.getMovie(args.movieId.toString())
         viewModel.movie.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Success -> {
                     response.data?.let {
-                        binding.apply {
-                            binding.movie = it
-                            genreMovie.apply {
-                                adapter = genreAdapter
+                        with(genreDetailAdapter) {
+                            binding.apply {
+                                movie = it
+                                genreMovie.apply {
+                                    adapter = this@with
+                                }
                             }
-                            genreAdapter.appendGenres(it.genres)
+                            appendGenres(it.genres)
+                            genreDetailClickListener = this@MovieDetailFragment
                         }
                     }
                 }
@@ -126,6 +127,7 @@ class MovieDetailFragment : Fragment() {
                 header = PagingLoadStateAdapter(this),
                 footer = PagingLoadStateAdapter(this)
             )
+            reviewClickListener = this@MovieDetailFragment
         }
         lifecycleScope.launch {
             viewModel.getReviewPaging(args.movieId.toString())
@@ -152,6 +154,14 @@ class MovieDetailFragment : Fragment() {
         param.width = Tools.getWidthScreen(requireActivity())
         param.height = Tools.getHeightScreen(requireActivity()) - Tools.getStatusBarHeight(requireContext()) - Tools.getSizeBottomNavBar(requireContext())
         binding.reviewMovies.layoutParams = param
+    }
+
+    override fun onGenreDetailClicked(binding: ItemGenreDetailMovieBinding, genre: Genre) {
+        showMovieByGenre(genre)
+    }
+
+    override fun onReviewClicked(binding: ItemReviewMovieBinding, review: Review) {
+        showReviewDetail(review)
     }
 
 }

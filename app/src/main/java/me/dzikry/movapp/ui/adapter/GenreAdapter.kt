@@ -1,4 +1,4 @@
-package me.dzikry.movapp.ui.home.movie.adapter
+package me.dzikry.movapp.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,10 +7,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import me.dzikry.movapp.data.models.Genre
 import me.dzikry.movapp.databinding.ItemGenreMovieBinding
+import javax.inject.Inject
 
-class GenreAdapter(
-    private val onGenreClick: (movie: Genre) -> Unit
-) : RecyclerView.Adapter<GenreAdapter.GenreViewHolder>(){
+class GenreAdapter @Inject constructor() : RecyclerView.Adapter<GenreAdapter.GenreViewHolder>(){
+
+    var genreClickListener: GenreClickListener? = null
 
     inner class GenreViewHolder(val item : ItemGenreMovieBinding): RecyclerView.ViewHolder(item.root)
 
@@ -37,7 +38,13 @@ class GenreAdapter(
     override fun onBindViewHolder(holder: GenreViewHolder, position: Int) {
         val genre = differ.currentList[position]
         holder.item.genre = genre
-        holder.itemView.setOnClickListener { onGenreClick.invoke(genre) }
+        holder.itemView.setOnClickListener {
+            genreClickListener?.onGenreClicked(holder.item, genre)
+        }
+    }
+
+    interface GenreClickListener {
+        fun onGenreClicked(binding: ItemGenreMovieBinding, genre: Genre)
     }
 
 }

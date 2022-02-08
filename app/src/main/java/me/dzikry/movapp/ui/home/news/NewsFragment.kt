@@ -14,14 +14,18 @@ import dagger.hilt.android.AndroidEntryPoint
 import me.dzikry.movapp.R
 import me.dzikry.movapp.data.models.Article
 import me.dzikry.movapp.databinding.FragmentNewsBinding
+import me.dzikry.movapp.databinding.ItemNewsCategoryBinding
+import me.dzikry.movapp.databinding.ItemNewsTrendingBinding
 import me.dzikry.movapp.ui.home.HomeActivity
-import me.dzikry.movapp.ui.home.news.adapter.NewsAdapter
-import me.dzikry.movapp.ui.home.news.adapter.TrendingAdapter
+import me.dzikry.movapp.ui.adapter.NewsAdapter
+import me.dzikry.movapp.ui.adapter.TrendingAdapter
 import me.dzikry.movapp.utils.Resource
 import me.dzikry.movapp.utils.Tools
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class NewsFragment : Fragment() {
+class NewsFragment : Fragment(), NewsAdapter.NewsClickListener,
+    TrendingAdapter.TrendingClickListener {
 
     companion object {
         fun newInstance() = NewsFragment()
@@ -30,8 +34,8 @@ class NewsFragment : Fragment() {
     private val viewModel: NewsViewModel by viewModels()
     private lateinit var binding: FragmentNewsBinding
 
-    private lateinit var adapterTrending: TrendingAdapter
-    private lateinit var adapterCategory: NewsAdapter
+    @Inject lateinit var adapterTrending: TrendingAdapter
+    @Inject lateinit var adapterCategory: NewsAdapter
 
     private val newsCategoryPage = 1
     private val newsTrendingPage = 1
@@ -109,11 +113,13 @@ class NewsFragment : Fragment() {
                 is Resource.Success -> {
                     isLoadingCategory(false)
                     response.data?.let {
-                        adapterCategory = NewsAdapter { news -> showNewsDetails(news) }
-                        binding.recyclerViewCategory.apply {
-                            adapter = adapterCategory
+                        with(adapterCategory) {
+                            binding.recyclerViewCategory.apply {
+                                adapter = this@with
+                            }
+                            differ.submitList(it)
+                            newsClickListener = this@NewsFragment
                         }
-                        adapterCategory.differ.submitList(it)
                     }
                 }
                 is Resource.Error -> {
@@ -143,11 +149,13 @@ class NewsFragment : Fragment() {
                 is Resource.Success -> {
                     isLoadingTrending(false)
                     response.data?.let {
-                        adapterTrending = TrendingAdapter { news -> showNewsDetails(news) }
-                        binding.recyclerViewTrending.apply {
-                            adapter = adapterTrending
+                        with(adapterTrending) {
+                            binding.recyclerViewTrending.apply {
+                                adapter = this@with
+                            }
+                            differ.submitList(it)
+                            trendingClickListener = this@NewsFragment
                         }
-                        adapterTrending.differ.submitList(it)
                     }
                 }
                 is Resource.Error -> {
@@ -180,6 +188,14 @@ class NewsFragment : Fragment() {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.data = Uri.parse(news.url)
         startActivity(intent)
+    }
+
+    override fun onNewsClicked(binding: ItemNewsCategoryBinding, article: Article) {
+        showNewsDetails(article)
+    }
+
+    override fun onTrendingClicked(binding: ItemNewsTrendingBinding, article: Article) {
+        showNewsDetails(article)
     }
 
 }

@@ -1,4 +1,4 @@
-package me.dzikry.movapp.ui.search.movie.adapter
+package me.dzikry.movapp.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,24 +7,28 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import me.dzikry.movapp.data.models.Movie
 import me.dzikry.movapp.databinding.ItemMovieBinding
+import javax.inject.Inject
 
-class SearchMovieAdapter(
-    private val onMovieClick: (movie: Movie) -> Unit
-) : PagingDataAdapter<Movie, SearchMovieAdapter.MovieViewHolder>(DiffUtilCallBack()) {
+class MoviePagingAdapter @Inject constructor() : PagingDataAdapter<Movie, MoviePagingAdapter.MovieViewHolder>(
+    DiffUtilCallBack()
+) {
+
+    var movieClickListener: MovieClickListener? = null
 
     inner class MovieViewHolder(val item : ItemMovieBinding): RecyclerView.ViewHolder(item.root)
 
-    override fun onBindViewHolder(holder: SearchMovieAdapter.MovieViewHolder, position: Int) {
-        getItem(position)?.let { movie ->
-            holder.item.movie = movie
-            holder.itemView.setOnClickListener { onMovieClick.invoke(movie) }
+    override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
+        val movie = getItem(position)!!
+        holder.item.movie = movie
+        holder.itemView.setOnClickListener {
+            movieClickListener?.onMovieClicked(holder.item, movie)
         }
     }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): SearchMovieAdapter.MovieViewHolder {
+    ): MovieViewHolder {
         return MovieViewHolder(
             ItemMovieBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
@@ -38,5 +42,9 @@ class SearchMovieAdapter(
         override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
             return oldItem == newItem
         }
+    }
+
+    interface MovieClickListener {
+        fun onMovieClicked(binding: ItemMovieBinding, movie: Movie)
     }
 }

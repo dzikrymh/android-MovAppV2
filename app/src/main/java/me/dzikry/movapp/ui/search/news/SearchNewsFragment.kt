@@ -16,14 +16,16 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.dzikry.movapp.data.models.Article
 import me.dzikry.movapp.databinding.FragmentSearchNewsBinding
+import me.dzikry.movapp.databinding.ItemNewsTrendingBinding
 import me.dzikry.movapp.ui.home.HomeActivity
-import me.dzikry.movapp.ui.search.news.adapter.SearchNewsAdapter
+import me.dzikry.movapp.ui.adapter.NewsPagingAdapter
 import me.dzikry.movapp.utils.PagingLoadStateAdapter
 import me.dzikry.movapp.utils.Tools
 import me.dzikry.movapp.utils.Tools.Companion.hideKeyboard
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class SearchNewsFragment : Fragment() {
+class SearchNewsFragment : Fragment(), NewsPagingAdapter.NewsClickListener {
 
     companion object {
         fun newInstance() = SearchNewsFragment()
@@ -32,7 +34,7 @@ class SearchNewsFragment : Fragment() {
     private val viewModel: SearchNewsViewModel by viewModels()
     private lateinit var binding: FragmentSearchNewsBinding
 
-    private lateinit var mAdapter: SearchNewsAdapter
+    @Inject lateinit var mAdapter: NewsPagingAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,12 +70,12 @@ class SearchNewsFragment : Fragment() {
                 findNavController().popBackStack()
             }
 
-            mAdapter = SearchNewsAdapter { article -> showNewsDetail(article) }
             mAdapter.apply {
                 recyclerViewSearch.adapter = withLoadStateHeaderAndFooter(
                     header = PagingLoadStateAdapter(this),
                     footer = PagingLoadStateAdapter(this)
                 )
+                newsClickListener = this@SearchNewsFragment
             }
 
             edtSearch.setOnEditorActionListener { _, id, _ ->
@@ -107,6 +109,10 @@ class SearchNewsFragment : Fragment() {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.data = Uri.parse(article.url)
         startActivity(intent)
+    }
+
+    override fun onNewsClicked(binding: ItemNewsTrendingBinding, article: Article) {
+        showNewsDetail(article)
     }
 
 }
