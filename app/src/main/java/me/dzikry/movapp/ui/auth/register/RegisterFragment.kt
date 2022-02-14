@@ -7,14 +7,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
+import me.dzikry.movapp.R
 import me.dzikry.movapp.data.models.User
 import me.dzikry.movapp.databinding.FragmentRegisterBinding
 import me.dzikry.movapp.ui.auth.AuthViewModel
+import me.dzikry.movapp.ui.auth.MainActivity
 import me.dzikry.movapp.ui.home.HomeActivity
 import me.dzikry.movapp.utils.Const
 import me.dzikry.movapp.utils.Resource
@@ -65,7 +66,11 @@ class RegisterFragment : Fragment() {
                 ) {
                     postRegister(name, email, username, password, phone)
                 } else {
-                    Toast.makeText(context, "Field cannot empty", Toast.LENGTH_SHORT).show()
+                    MainActivity.toastTop(
+                        "Field cannot empty",
+                        resources.getColor(R.color.white), resources.getColor(
+                            R.color.error),
+                    )
                 }
             }
         }
@@ -85,6 +90,11 @@ class RegisterFragment : Fragment() {
                     isLoading(false)
                     response.data?.let { user ->
                         viewModel.token.observe(viewLifecycleOwner) { token ->
+                            MainActivity.toastTop(
+                                "Registered Success",
+                                resources.getColor(R.color.white),
+                                resources.getColor(R.color.success),
+                            )
                             activity?.saveToken(token = token)
                             gotoHome(token, user)
                         }
@@ -94,7 +104,11 @@ class RegisterFragment : Fragment() {
                 is Resource.Error -> {
                     isLoading(false)
                     response.message?.let { error ->
-                        Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
+                        MainActivity.toastTop(
+                            error,
+                            resources.getColor(R.color.white),
+                            resources.getColor(R.color.error),
+                        )
                     }
                 }
 

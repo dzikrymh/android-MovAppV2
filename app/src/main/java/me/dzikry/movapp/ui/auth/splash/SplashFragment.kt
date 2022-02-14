@@ -16,6 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import me.dzikry.movapp.R
 import me.dzikry.movapp.data.models.User
 import me.dzikry.movapp.ui.auth.AuthViewModel
+import me.dzikry.movapp.ui.auth.MainActivity
 import me.dzikry.movapp.ui.home.HomeActivity
 import me.dzikry.movapp.utils.Const
 import me.dzikry.movapp.utils.Resource
@@ -69,7 +70,7 @@ class SplashFragment : Fragment() {
                         }, 3000)
 
                         response.message?.let { error ->
-                            Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
+                            MainActivity.toastTop(error, resources.getColor(R.color.white), resources.getColor(R.color.error))
                         }
                     }
 
