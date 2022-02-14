@@ -1,8 +1,7 @@
 package me.dzikry.movapp.data.networks
 
-import me.dzikry.movapp.data.models.response.Meta
-import me.dzikry.movapp.data.models.response.UserResponse
-import me.dzikry.movapp.data.models.response.UserResponseWithoutToken
+import me.dzikry.movapp.data.models.Account
+import me.dzikry.movapp.data.models.response.*
 import me.dzikry.movapp.utils.Const
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -42,5 +41,39 @@ interface AuthAPIs {
         @Header("Accept") accept: String = "application/json",
         @Header("Authorization") token: String
     ): Response<Meta>
+
+    /**
+     * Auth baru langsung dari themoviedb.org
+     **/
+    @GET("authentication/token/new")
+    suspend fun requestToken(
+        @Query("api_key") api_key: String,
+    ): Response<RequestTokenResponse>
+
+    @POST("authentication/token/validate_with_login")
+    suspend fun validateLogin(
+        @Query("api_key") api_key: String,
+        @Field("username") username: String,
+        @Field("password") password: String,
+        @Field("request_token") request_token: String,
+    ): Response<RequestTokenResponse>
+
+    @POST("authentication/session/new")
+    suspend fun createSessionID(
+        @Query("api_key") api_key: String,
+        @Field("request_token") request_token: String,
+    ): Response<SessionIDResponse>
+
+    @DELETE("authentication/session")
+    suspend fun sessionLogout(
+        @Query("api_key") api_key: String,
+        @Field("session_id") session_id: String,
+    ): Response<SessionLogout>
+
+    @GET("account")
+    suspend fun getAccountDetail(
+        @Query("api_key") api_key: String,
+        @Query("session_id") session_id: String,
+    ): Response<Account>
 
 }
