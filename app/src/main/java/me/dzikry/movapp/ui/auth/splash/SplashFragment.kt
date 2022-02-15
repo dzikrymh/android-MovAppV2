@@ -3,25 +3,23 @@ package me.dzikry.movapp.ui.auth.splash
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import me.dzikry.movapp.R
-import me.dzikry.movapp.data.models.User
+import me.dzikry.movapp.data.models.Account
 import me.dzikry.movapp.ui.auth.AuthViewModel
 import me.dzikry.movapp.ui.auth.MainActivity
 import me.dzikry.movapp.ui.home.HomeActivity
 import me.dzikry.movapp.utils.Const
 import me.dzikry.movapp.utils.Resource
 import me.dzikry.movapp.utils.Tools
-import me.dzikry.movapp.utils.Tools.Companion.restoreToken
+import me.dzikry.movapp.utils.Tools.Companion.restoreSessionID
 
 @AndroidEntryPoint
 class SplashFragment : Fragment() {
@@ -31,54 +29,42 @@ class SplashFragment : Fragment() {
     }
 
     private val viewModel: AuthViewModel by viewModels()
-    private var token: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         Tools.setStatusBarTransparent(requireActivity())
-
-        activity?.restoreToken()?.let {
-            token = it
-            Log.i("Splash_Screen", "token=$it")
-        }
-
         return inflater.inflate(R.layout.fragment_splash, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        if (token.isNullOrEmpty()) {
-            Handler().postDelayed({
-                gotoLogin()
-            }, 3000)
-        } else {
-            viewModel.getUser(token = token!!)
-            viewModel.user.observe(viewLifecycleOwner) { response ->
+        activity?.restoreSessionID()?.let {
+            viewModel.accountDetail(it)
+            viewModel.account.observe(viewLifecycleOwner) { response ->
                 when (response) {
                     is Resource.Success -> {
-                        response.data?.let { user ->
-                            gotoHome(token!!, user)
+                        response.data?.let { account ->
+                            gotoHome(it, account)
                         }
                     }
-
                     is Resource.Error -> {
-                        Handler().postDelayed({
-                            gotoLogin()
-                        }, 3000)
-
+                        gotoLogin()
                         response.message?.let { error ->
                             MainActivity.toastTop(error, resources.getColor(R.color.white), resources.getColor(R.color.error))
                         }
                     }
-
                     is Resource.Loading -> {
 
                     }
                 }
             }
+        } ?: run {
+            Handler().postDelayed({
+                gotoLogin()
+            }, 3000)
         }
     }
 
@@ -87,13 +73,13 @@ class SplashFragment : Fragment() {
         findNavController().navigate(action)
     }
 
-    private fun gotoHome(token: String, user: User) {
+    private fun gotoHome(session_id: String, account: Account) {
         val gson = Gson()
-        val jsonUser: String = gson.toJson(user)
+        val jsonAccount: String = gson.toJson(account)
 
         val intent = Intent(context, HomeActivity::class.java)
-        intent.putExtra(Const.TOKEN, token)
-        intent.putExtra(Const.USER, jsonUser)
+        intent.putExtra(Const.ACCOUNT, jsonAccount)
+        intent.putExtra(Const.SESSION_ID, session_id)
         startActivity(intent)
         activity?.finish()
     }

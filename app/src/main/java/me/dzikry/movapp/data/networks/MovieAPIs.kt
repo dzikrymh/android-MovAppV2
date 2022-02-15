@@ -68,7 +68,7 @@ interface MovieAPIs {
         @Path("account_id") account_id: Int,
         @Query("api_key") api_key: String,
         @Query("session_id") session_id: String,
-        @Query("sort_by") sort_by: String,
+        @Query("sort_by") sort_by: String = "created_at.desc",
         @Query("page") page: Int,
     ): Response<MovieResponse>
 
@@ -79,7 +79,7 @@ interface MovieAPIs {
         @Query("api_key") api_key: String,
         @Query("session_id") session_id: String,
         @Field("media_type") media_type: String = "movie",
-        @Field("media_id") movie_id: Int,
+        @Field("media_id") movie_id: String,
         @Field("favorite") favorite: Boolean,
     ): Response<BaseMovieResponse>
 

@@ -3,16 +3,15 @@ package me.dzikry.movapp.data.repositories
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 import me.dzikry.movapp.data.models.Movie
 import me.dzikry.movapp.data.models.MovieDetail
 import me.dzikry.movapp.data.models.Review
-import me.dzikry.movapp.data.models.response.GenreResponse
-import me.dzikry.movapp.data.models.response.MovieResponse
-import me.dzikry.movapp.data.models.response.ReviewResponse
-import me.dzikry.movapp.data.models.response.TrailerResponse
+import me.dzikry.movapp.data.models.response.*
 import me.dzikry.movapp.data.networks.MovieAPIs
 import me.dzikry.movapp.data.paging.datasources.DiscoverMovieByGenrePagingSource
+import me.dzikry.movapp.data.paging.datasources.FavoriteMoviePagingSource
 import me.dzikry.movapp.data.paging.datasources.ReviewMoviePagingSource
 import me.dzikry.movapp.data.paging.datasources.SearchMoviePagingSource
 import me.dzikry.movapp.utils.Const
@@ -123,4 +122,61 @@ class MovieRepositoryImpl @Inject constructor(
             SearchMoviePagingSource(api, keyword)
         }
     ).flow
+
+    override suspend fun getFavoriteMovies(
+        account_id: Int,
+        session_id: String
+    ): Flow<PagingData<Movie>> = Pager(
+        config = PagingConfig(
+            pageSize = 20,
+            maxSize = 200
+        ),
+        pagingSourceFactory = {
+            FavoriteMoviePagingSource(api, account_id, session_id)
+        }
+    ).flow
+
+    override suspend fun markAsFavoriteMovie(
+        account_id: Int,
+        session_id: String,
+        movie_id: String,
+        favorite: Boolean
+    ): BaseMovieResponse {
+        val response = api.markAsFavoriteMovie(
+            account_id = account_id,
+            api_key = Const.API_KEY_MOVIE,
+            session_id = session_id,
+            movie_id = movie_id,
+            favorite = favorite
+        )
+
+        if (response.isSuccessful) {
+            return response.body()!!
+        } else {
+            val gson = Gson()
+            val errorResponse: BaseMovieResponse =
+                gson.fromJson(response.errorBody()!!.charStream(), BaseMovieResponse::class.java)
+            throw IOException(errorResponse.status_message)
+        }
+    }
+
+    override suspend fun getAccountStatesMovie(
+        session_id: String,
+        movie_id: String
+    ): AccountStateMovieResponse {
+        val response = api.getAccountStatesMovie(
+            movie_id = movie_id,
+            api_key = Const.API_KEY_MOVIE,
+            session_id = session_id
+        )
+
+        if (response.isSuccessful) {
+            return response.body()!!
+        } else {
+            val gson = Gson()
+            val errorResponse: BaseMovieResponse =
+                gson.fromJson(response.errorBody()!!.charStream(), BaseMovieResponse::class.java)
+            throw IOException(errorResponse.status_message)
+        }
+    }
 }

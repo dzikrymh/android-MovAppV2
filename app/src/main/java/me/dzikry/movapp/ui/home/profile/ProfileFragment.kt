@@ -2,7 +2,6 @@ package me.dzikry.movapp.ui.home.profile
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,15 +10,14 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
-import me.dzikry.movapp.data.models.User
+import me.dzikry.movapp.data.models.Account
 import me.dzikry.movapp.databinding.FragmentProfileBinding
 import me.dzikry.movapp.ui.auth.AuthViewModel
 import me.dzikry.movapp.ui.auth.MainActivity
 import me.dzikry.movapp.ui.home.HomeActivity
 import me.dzikry.movapp.utils.Const
 import me.dzikry.movapp.utils.Resource
-import me.dzikry.movapp.utils.Tools.Companion.restoreToken
-import me.dzikry.movapp.utils.Tools.Companion.revokeToken
+import me.dzikry.movapp.utils.Tools.Companion.revokeSessionID
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
@@ -31,8 +29,8 @@ class ProfileFragment : Fragment() {
     private val viewModel: ProfileViewModel by viewModels()
     private val authViewModel: AuthViewModel by viewModels()
     private lateinit var binding: FragmentProfileBinding
-    private lateinit var token: String
-    private lateinit var mUser: User
+    private lateinit var sessionID: String
+    private lateinit var mAccount: Account
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,12 +47,12 @@ class ProfileFragment : Fragment() {
             val bundle: Bundle? = activity?.intent?.extras
             bundle?.let {
                 it.apply {
-                    token = getString(Const.TOKEN)!!
-                    val jsonUser = getString(Const.USER)
+                    sessionID = getString(Const.SESSION_ID)!!
+                    val jsonAccount = getString(Const.ACCOUNT)
                     val gson = Gson()
-                    mUser = gson.fromJson(jsonUser, User::class.java)
+                    mAccount = gson.fromJson(jsonAccount, Account::class.java)
 
-                    user = mUser
+                    account = mAccount
                 }
             }
             logout.setOnClickListener {
@@ -64,28 +62,38 @@ class ProfileFragment : Fragment() {
     }
 
     private fun actionLogout() {
-        authViewModel.logout(token)
-        authViewModel.meta.observe(viewLifecycleOwner) { response ->
+        authViewModel.sessionLogout(sessionID)
+        authViewModel.sessionLogout.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Success -> {
-                    activity?.revokeToken()
-
-                    val token = activity?.restoreToken()
-                    Log.i("Profile_Screen", "token=" + token.toString())
-
+                    isLoading(false)
+                    activity?.revokeSessionID()
                     startActivity(Intent(context, MainActivity::class.java))
                     activity?.finish()
                 }
 
                 is Resource.Error -> {
+                    isLoading(false)
                     response.message?.let { error ->
                         Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
                     }
                 }
 
                 is Resource.Loading -> {
-
+                    isLoading(true)
                 }
+            }
+        }
+    }
+
+    private fun isLoading(value: Boolean) {
+        binding.apply {
+            if (value) {
+                loading.visibility = View.VISIBLE
+                logout.visibility = View.GONE
+            } else {
+                loading.visibility = View.GONE
+                logout.visibility = View.VISIBLE
             }
         }
     }

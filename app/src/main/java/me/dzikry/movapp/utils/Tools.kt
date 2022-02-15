@@ -2,6 +2,7 @@ package me.dzikry.movapp.utils
 
 import android.app.Activity
 import android.content.Context
+import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Build
@@ -12,7 +13,9 @@ import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
-import androidx.core.content.edit
+import android.widget.ProgressBar
+import androidx.annotation.ColorInt
+import androidx.core.graphics.drawable.DrawableCompat
 import me.dzikry.movapp.R
 import java.lang.Exception
 import kotlin.math.roundToInt
@@ -25,25 +28,26 @@ class Tools {
             inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
         }
 
-        fun Activity.saveToken(token: String) {
+        fun Activity.saveSessionID(session_id: String) {
             val sharedPref = getPreferences(Context.MODE_PRIVATE)
-            sharedPref.edit().apply {
-                putString(Const.PREFERENCE_TOKEN, token)
+            with (sharedPref.edit()) {
+                putString(Const.PREFERENCE_SESSION_ID, session_id)
                 apply()
             }
         }
 
-        fun Activity.revokeToken() {
+        fun Activity.revokeSessionID() {
             val sharedPref = getPreferences(Context.MODE_PRIVATE)
-            sharedPref.edit().apply {
-                remove(Const.PREFERENCE_TOKEN)
+            with (sharedPref.edit()) {
+                remove(Const.PREFERENCE_SESSION_ID)
+                clear()
                 apply()
             }
         }
 
-        fun Activity.restoreToken(): String? {
+        fun Activity.restoreSessionID(): String? {
             val sharedPref = getPreferences(Context.MODE_PRIVATE)
-            return sharedPref.getString(Const.PREFERENCE_TOKEN, null)
+            return sharedPref.getString(Const.PREFERENCE_SESSION_ID, null)
         }
 
         fun getGridSpanCountMovie(activity: Activity): Int {

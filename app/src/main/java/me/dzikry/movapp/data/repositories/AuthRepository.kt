@@ -1,12 +1,12 @@
 package me.dzikry.movapp.data.repositories
 
-import me.dzikry.movapp.data.models.response.Meta
-import me.dzikry.movapp.data.models.response.UserResponse
-import me.dzikry.movapp.data.models.response.UserResponseWithoutToken
+import me.dzikry.movapp.data.models.Account
+import me.dzikry.movapp.data.models.response.*
 
 interface AuthRepository {
-    suspend fun login(email: String, password: String) : UserResponse
-    suspend fun register(name: String, email: String, username: String, password: String, phone: String) : UserResponse
-    suspend fun getUser(token: String) : UserResponseWithoutToken
-    suspend fun logout(token: String) : Meta
+    suspend fun requestToken() : RequestTokenResponse
+    suspend fun validateLogin(username: String, password: String, request_token: String) : RequestTokenResponse
+    suspend fun createSessionID(request_token: String) : SessionIDResponse
+    suspend fun sessionLogout(session_id: String) : SessionLogout
+    suspend fun getAccountDetail(session_id: String) : Account
 }

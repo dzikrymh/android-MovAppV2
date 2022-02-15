@@ -36,7 +36,7 @@
             android:minHeight="40dp"
             android:layout_gravity="center_vertical"
             android:textSize="14sp"
-            android:padding="8dp"
+            android:padding="16dp"
             android:maxLines="2"
             android:ellipsize="end"
             tools:text="@tools:sample/lorem/random" />

@@ -1,5 +1,6 @@
 package me.dzikry.movapp.ui.home
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -22,7 +23,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.transition.Transition
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
-import me.dzikry.movapp.data.models.User
+import me.dzikry.movapp.data.models.Account
 import me.dzikry.movapp.utils.Const
 
 @AndroidEntryPoint
@@ -31,8 +32,8 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var navController: NavController
     private lateinit var navHostFragment: NavHostFragment
-    private lateinit var token: String
-    private lateinit var user: User
+    private lateinit var account: Account
+    private lateinit var pathPhoto: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,11 +43,16 @@ class HomeActivity : AppCompatActivity() {
         val bundle: Bundle? = intent.extras
         bundle?.let {
             it.apply {
-                token = getString(Const.TOKEN)!!
-                val jsonUser = getString(Const.USER)
+                val jsonAccount = getString(Const.ACCOUNT)
 
                 val gson = Gson()
-                user = gson.fromJson(jsonUser, User::class.java)
+                account = gson.fromJson(jsonAccount, Account::class.java)
+
+                account.avatar.tmdb?.avatar_path?.let { path ->
+                    pathPhoto = Const.BASE_PATH_TMDB + path
+                } ?: run {
+                    pathPhoto = Const.BASE_PATH_AVATAR + account.avatar.gravatar.hash
+                }
             }
         }
 
@@ -57,7 +63,7 @@ class HomeActivity : AppCompatActivity() {
 
         binding.navView.setupWithNavController(navController)
 
-        loadUrlAsTabProfileImage(user.profile_photo_url)
+        loadUrlAsTabProfileImage(pathPhoto)
     }
 
     private fun loadUrlAsTabProfileImage(url: String) {
@@ -73,6 +79,12 @@ class HomeActivity : AppCompatActivity() {
                 ) {
                     val drawable: Drawable = BitmapDrawable(resources, resource)
                     binding.navView.menu.findItem(R.id.profileFragment).icon = drawable
+                }
+
+                @SuppressLint("UseCompatLoadingForDrawables")
+                override fun onLoadFailed(errorDrawable: Drawable?) {
+                    super.onLoadFailed(errorDrawable)
+                    binding.navView.menu.findItem(R.id.profileFragment).icon = resources.getDrawable(R.drawable.ic_account)
                 }
             })
     }

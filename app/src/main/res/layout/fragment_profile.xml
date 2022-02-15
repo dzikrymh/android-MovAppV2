@@ -6,8 +6,8 @@
 
     <data>
         <variable
-            name="user"
-            type="me.dzikry.movapp.data.models.User" />
+            name="account"
+            type="me.dzikry.movapp.data.models.Account" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,7 +20,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:elevation="3dp"
-            loadUrl="@{user.profile_photo_url}"
+            loadAvatar="@{account.avatar}"
             app:civ_border_color="?attr/colorOnPrimary"
             app:civ_border_width="2dp"
             app:layout_constraintVertical_chainStyle="packed"
@@ -39,7 +39,7 @@
             android:fontFamily="@font/poppins_semibold"
             android:textColor="?attr/textPrimary"
             android:textSize="16sp"
-            android:text="@{user.name}"
+            android:text="@{account.name}"
             app:layout_constraintBottom_toTopOf="@+id/username"
             app:layout_constraintEnd_toEndOf="@+id/image"
             app:layout_constraintHorizontal_bias="0.5"
@@ -55,7 +55,7 @@
             android:fontFamily="@font/poppins"
             android:textColor="?attr/textPrimary"
             android:textSize="14sp"
-            username="@{user.username}"
+            username="@{account.username}"
             app:layout_constraintBottom_toTopOf="@+id/constraintLayoutBottom"
             app:layout_constraintEnd_toEndOf="@+id/name"
             app:layout_constraintHorizontal_bias="0.5"
@@ -71,17 +71,32 @@
             android:backgroundTint="?attr/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent">
 
+            <ProgressBar
+                android:id="@+id/loading"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:indeterminateTint="@color/white"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="70dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/logout"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
-                android:layout_margin="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="70dp"
                 app:cardElevation="3dp"
                 app:cardCornerRadius="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/sizeBox">
+                app:layout_constraintBottom_toBottomOf="parent">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -93,13 +108,6 @@
                     android:layout_gravity="center"/>
 
             </androidx.cardview.widget.CardView>
-
-            <View
-                android:id="@+id/sizeBox"
-                android:layout_width="match_parent"
-                android:layout_height="?actionBarSize"
-                android:background="@color/transparent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

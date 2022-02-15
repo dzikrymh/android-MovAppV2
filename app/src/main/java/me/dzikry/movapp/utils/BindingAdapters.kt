@@ -15,15 +15,29 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import me.dzikry.movapp.R
-import java.lang.Exception
+import me.dzikry.movapp.data.models.Account
 import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.Exception
 
 @BindingAdapter("loadUrl")
 fun ImageView.loadUrl(url: String?) {
     if (url.isNullOrEmpty()) return
     Glide.with(this).load(url).transform(CenterCrop()).into(this)
+}
+
+@BindingAdapter("loadAvatar")
+fun ImageView.loadUrl(avatar: Account.Avatar) {
+    try {
+        avatar.tmdb?.avatar_path?.let {
+            Glide.with(this).load(Const.BASE_PATH_TMDB + it).transform(CenterCrop()).into(this)
+        } ?: run {
+            Glide.with(this).load(Const.BASE_PATH_AVATAR + avatar.gravatar.hash).transform(CenterCrop()).into(this)
+        }
+    } catch (e: Exception) {
+        return
+    }
 }
 
 @BindingAdapter("publishAuthor")

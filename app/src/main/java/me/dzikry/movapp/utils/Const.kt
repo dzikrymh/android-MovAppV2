@@ -3,9 +3,6 @@ package me.dzikry.movapp.utils
 class Const {
     companion object {
         /** API NEWS **/
-        const val BASE_URL_AUTH = "http://192.168.1.8:8000/api/"
-
-        /** API NEWS **/
         const val BASE_URL_NEWS = "https://newsapi.org/v2/"
         const val API_KEY_NEWS = "53bc8066d2c04b89b40ecaec64e20e77"
 
@@ -17,12 +14,13 @@ class Const {
         const val BASE_PATH_TRAILER = "https://www.youtube.com/watch?v="
         const val BASE_PATH_POSTER = "https://image.tmdb.org/t/p/w342"
         const val BASE_PATH_BACKDROP = "https://image.tmdb.org/t/p/w1280"
+        const val BASE_PATH_TMDB = "https://image.tmdb.org/t/p/w342"
         const val BASE_PATH_AVATAR = "https://secure.gravatar.com/avatar"
 
         /** KEY DATA **/
-        const val PREFERENCE_TOKEN = "token"
-        const val TOKEN = "extra_token"
-        const val USER = "extra_user"
+        const val PREFERENCE_SESSION_ID = "pref_session_id"
+        const val SESSION_ID = "extra_session_id"
+        const val ACCOUNT = "extra_account"
         const val MOVIE_ID = "extra_movie_id"
         const val GENRE_ID = "extra_genre_id"
         const val GENRE_NAME = "extra_genre_name"
