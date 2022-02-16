@@ -1,5 +1,6 @@
-package me.dzikry.movapp.ui.movie_by_genre
+package me.dzikry.movapp.ui.home.favorite
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,51 +9,65 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import me.dzikry.movapp.data.models.Account
 import me.dzikry.movapp.data.models.Movie
-import me.dzikry.movapp.databinding.FragmentMovieByGenreBinding
+import me.dzikry.movapp.databinding.FragmentFavoriteBinding
 import me.dzikry.movapp.databinding.ItemMovieBinding
-import me.dzikry.movapp.ui.home.HomeActivity
 import me.dzikry.movapp.ui.adapter.MoviePagingAdapter
+import me.dzikry.movapp.utils.Const
 import me.dzikry.movapp.utils.PagingLoadStateAdapter
 import me.dzikry.movapp.utils.SpacingItemDecoration
 import me.dzikry.movapp.utils.Tools
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MovieByGenreFragment : Fragment(), MoviePagingAdapter.MovieClickListener {
+class FavoriteFragment : Fragment(), MoviePagingAdapter.MovieClickListener {
 
     companion object {
-        fun newInstance() = MovieByGenreFragment()
+        fun newInstance() = FavoriteFragment()
     }
 
-    private val viewModel: MovieByGenreViewModel by viewModels()
-    private lateinit var binding: FragmentMovieByGenreBinding
+    private val viewModel: FavoriteViewModel by viewModels()
+    private lateinit var binding: FragmentFavoriteBinding
 
     @Inject lateinit var mAdapter: MoviePagingAdapter
     private lateinit var moviesLayoutMgr: StaggeredGridLayoutManager
 
-    private val args: MovieByGenreFragmentArgs by navArgs()
+    private lateinit var sessionid: String
+    private lateinit var account: Account
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        val bundle: Bundle? = activity?.intent?.extras
+        bundle?.let {
+            it.apply {
+                sessionid = getString(Const.SESSION_ID)!!
+                val jsonAccount = getString(Const.ACCOUNT)
+                val gson = Gson()
+                account = gson.fromJson(jsonAccount, Account::class.java)
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentMovieByGenreBinding.inflate(inflater, container, false)
+        binding = FragmentFavoriteBinding.inflate(inflater, container, false)
 
         Tools.setStatusBarTransparent(requireActivity())
         Tools.setMargins(
-            binding.titleGenre,
-            left = Tools.dpToPx(requireContext(), 16),
-            top = Tools.dpToPx(requireContext(), 16) + Tools.getStatusBarHeight(requireContext()),
-            right = Tools.dpToPx(requireContext(), 16),
+            binding.headerContainer,
+            left = 0,
+            top = Tools.getStatusBarHeight(requireContext()),
+            right = 0,
             bottom = 0
         )
-        HomeActivity.animate(true)
 
         return binding.root
     }
@@ -66,30 +81,32 @@ class MovieByGenreFragment : Fragment(), MoviePagingAdapter.MovieClickListener {
         )
         with(mAdapter) {
             binding.apply {
-                discoverMovies.layoutManager = StaggeredGridLayoutManager(Tools.getGridSpanCountMovie(requireActivity()), StaggeredGridLayoutManager.VERTICAL)
+                favoriteMovies.layoutManager = StaggeredGridLayoutManager(Tools.getGridSpanCountMovie(requireActivity()), StaggeredGridLayoutManager.VERTICAL)
                 val decoration = SpacingItemDecoration(Tools.getGridSpanCountMovie(requireActivity()), Tools.dpToPx(requireContext(), 2), false)
-                discoverMovies.addItemDecoration(decoration)
-                discoverMovies.adapter = withLoadStateHeaderAndFooter(
+                favoriteMovies.addItemDecoration(decoration)
+                favoriteMovies.adapter = withLoadStateHeaderAndFooter(
                     header = PagingLoadStateAdapter(this@with),
                     footer = PagingLoadStateAdapter(this@with)
                 )
             }
-            movieClickListener = this@MovieByGenreFragment
+            movieClickListener = this@FavoriteFragment
         }
 
         lifecycleScope.launch {
-            viewModel.getDiscoverMovieByGenre(args.genreId.toString())
+            viewModel.getDiscoverFavoriteMovie(
+                account_id = account.id,
+                session_id = sessionid,
+            )
         }
         lifecycleScope.launch {
-            viewModel.movieFlow.collectLatest {
+            viewModel.movieFavoriteFlow.collectLatest {
                 mAdapter.submitData(it)
             }
         }
-
     }
 
     private fun showDetailMovie(movie: Movie) {
-        val action = MovieByGenreFragmentDirections.actionMovieByGenreFragmentToMovieDetailFragment(movie.id, args.accountId, args.sessionId)
+        val action = FavoriteFragmentDirections.actionFavoriteFragmentToMovieDetailFragment(movie.id, account.id, sessionid)
         findNavController().navigate(action)
     }
 

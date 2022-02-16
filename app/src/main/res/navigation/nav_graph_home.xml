@@ -42,6 +42,12 @@
         android:name="me.dzikry.movapp.ui.search.movie.SearchMovieFragment"
         android:label="fragment_search_movie"
         tools:layout="@layout/fragment_search_movie" >
+        <argument
+            android:name="account_id"
+            app:argType="integer" />
+        <argument
+            android:name="session_id"
+            app:argType="string" />
         <action
             android:id="@+id/action_searchMovieFragment_to_movieDetailFragment"
             app:destination="@id/movieDetailFragment" />
@@ -63,6 +69,12 @@
         <argument
             android:name="genre_id"
             app:argType="integer" />
+        <argument
+            android:name="account_id"
+            app:argType="integer" />
+        <argument
+            android:name="session_id"
+            app:argType="string" />
         <action
             android:id="@+id/action_movieByGenreFragment_to_movieDetailFragment"
             app:destination="@id/movieDetailFragment" />
@@ -78,6 +90,12 @@
         <action
             android:id="@+id/action_movieDetailFragment_to_movieByGenreFragment"
             app:destination="@id/movieByGenreFragment" />
+        <argument
+            android:name="account_id"
+            app:argType="integer" />
+        <argument
+            android:name="session_id"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/newsDetailFragment"
@@ -87,5 +105,14 @@
         <argument
             android:name="json_article"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="me.dzikry.movapp.ui.home.favorite.FavoriteFragment"
+        android:label="fragment_favorite"
+        tools:layout="@layout/fragment_favorite" >
+        <action
+            android:id="@+id/action_favoriteFragment_to_movieDetailFragment"
+            app:destination="@id/movieDetailFragment" />
     </fragment>
 </navigation>

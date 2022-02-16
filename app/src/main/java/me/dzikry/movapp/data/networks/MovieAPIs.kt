@@ -72,10 +72,10 @@ interface MovieAPIs {
         @Query("page") page: Int,
     ): Response<MovieResponse>
 
+    @FormUrlEncoded
     @POST("account/{account_id}/favorite")
     suspend fun markAsFavoriteMovie(
         @Path("account_id") account_id: Int,
-        @Header("Content-Type") content_type: String = "application/json;charset=utf-8",
         @Query("api_key") api_key: String,
         @Query("session_id") session_id: String,
         @Field("media_type") media_type: String = "movie",

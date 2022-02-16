@@ -1,5 +1,6 @@
 package me.dzikry.movapp.ui.home.movie
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,7 +9,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
+import me.dzikry.movapp.data.models.Account
 import me.dzikry.movapp.data.models.Genre
 import me.dzikry.movapp.data.models.Movie
 import me.dzikry.movapp.databinding.FragmentMovieBinding
@@ -19,6 +22,7 @@ import me.dzikry.movapp.ui.home.HomeActivity
 import me.dzikry.movapp.ui.adapter.GenreAdapter
 import me.dzikry.movapp.ui.adapter.MovieAdapter
 import me.dzikry.movapp.ui.adapter.MovieMotionAdapter
+import me.dzikry.movapp.utils.Const
 import me.dzikry.movapp.utils.Resource
 import me.dzikry.movapp.utils.Tools
 import javax.inject.Inject
@@ -33,6 +37,8 @@ class MovieFragment : Fragment(), MovieAdapter.MovieClickListener,
 
     private val viewModel: MovieViewModel by viewModels()
     private lateinit var binding: FragmentMovieBinding
+    private lateinit var sessionid: String
+    private lateinit var account: Account
 
     @Inject lateinit var popularAdapter: MovieAdapter
     @Inject lateinit var topRatedAdapter: MovieAdapter
@@ -42,6 +48,19 @@ class MovieFragment : Fragment(), MovieAdapter.MovieClickListener,
     private var popularPage = 1
     private var upcomingPage = 1
     private var topRatedPage = 1
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        val bundle: Bundle? = activity?.intent?.extras
+        bundle?.let {
+            it.apply {
+                sessionid = getString(Const.SESSION_ID)!!
+                val jsonAccount = getString(Const.ACCOUNT)
+                val gson = Gson()
+                account = gson.fromJson(jsonAccount, Account::class.java)
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,7 +92,7 @@ class MovieFragment : Fragment(), MovieAdapter.MovieClickListener,
         super.onActivityCreated(savedInstanceState)
 
         binding.imageSearch.setOnClickListener {
-            val action = MovieFragmentDirections.actionMovieFragmentToSearchMovieFragment()
+            val action = MovieFragmentDirections.actionMovieFragmentToSearchMovieFragment(account.id, sessionid)
             findNavController().navigate(action)
         }
 
@@ -199,12 +218,12 @@ class MovieFragment : Fragment(), MovieAdapter.MovieClickListener,
     }
 
     private fun showMovieByGenre(genre: Genre) {
-        val action = MovieFragmentDirections.actionMovieFragmentToMovieByGenreFragment(genre.id)
+        val action = MovieFragmentDirections.actionMovieFragmentToMovieByGenreFragment(genre.id, account.id, sessionid)
         findNavController().navigate(action)
     }
 
     private fun showMovieDetail(movie: Movie) {
-        val action = MovieFragmentDirections.actionMovieFragmentToMovieDetailFragment(movie.id)
+        val action = MovieFragmentDirections.actionMovieFragmentToMovieDetailFragment(movie.id, account.id, sessionid)
         findNavController().navigate(action)
     }
 

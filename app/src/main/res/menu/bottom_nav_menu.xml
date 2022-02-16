@@ -5,6 +5,10 @@
         android:title="@string/movie"
         android:icon="@drawable/ic_movie_selector" />
 
+    <item android:id="@+id/favoriteFragment"
+        android:title="@string/favorite"
+        android:icon="@drawable/ic_favorite_selector" />
+
     <item android:id="@+id/newsFragment"
         android:title="@string/news"
         android:icon="@drawable/ic_news_selector" />

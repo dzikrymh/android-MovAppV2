@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavArgs
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,6 +39,8 @@ class SearchMovieFragment : Fragment(), MoviePagingAdapter.MovieClickListener {
 
     @Inject lateinit var mAdapter: MoviePagingAdapter
     private lateinit var moviesLayoutMgr: StaggeredGridLayoutManager
+
+    private val args: SearchMovieFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -128,7 +132,7 @@ class SearchMovieFragment : Fragment(), MoviePagingAdapter.MovieClickListener {
     }
 
     private fun showDetailMovie(movie: Movie) {
-        val action = SearchMovieFragmentDirections.actionSearchMovieFragmentToMovieDetailFragment(movie.id)
+        val action = SearchMovieFragmentDirections.actionSearchMovieFragmentToMovieDetailFragment(movie.id, args.accountId, args.sessionId)
         findNavController().navigate(action)
     }
 

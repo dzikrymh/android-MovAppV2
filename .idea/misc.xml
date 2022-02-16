@@ -11,6 +11,9 @@
         <entry key="app/src/main/res/drawable/ic_account.xml" value="0.26666666666666666" />
         <entry key="app/src/main/res/drawable/ic_account_placeholder.xml" value="0.26666666666666666" />
         <entry key="app/src/main/res/drawable/ic_account_selector.xml" value="0.26666666666666666" />
+        <entry key="app/src/main/res/drawable/ic_favorite.xml" value="0.2085" />
+        <entry key="app/src/main/res/drawable/ic_favorite_placeholder.xml" value="0.2085" />
+        <entry key="app/src/main/res/drawable/ic_favorite_selector.xml" value="0.2085" />
         <entry key="app/src/main/res/drawable/ic_icons8_news.xml" value="0.26666666666666666" />
         <entry key="app/src/main/res/drawable/ic_movie.xml" value="0.26666666666666666" />
         <entry key="app/src/main/res/drawable/ic_movie_placeholder.xml" value="0.26666666666666666" />
@@ -22,6 +25,7 @@
         <entry key="app/src/main/res/drawable/radio_selector.xml" value="0.26666666666666666" />
         <entry key="app/src/main/res/layout/activity_home.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25052083333333336" />
+        <entry key="app/src/main/res/layout/fragment_favorite.xml" value="0.2468994140625" />
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.213262939453125" />
         <entry key="app/src/main/res/layout/fragment_movie.xml" value="0.25052083333333336" />
         <entry key="app/src/main/res/layout/fragment_movie_by_genre.xml" value="0.25052083333333336" />

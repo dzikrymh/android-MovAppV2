@@ -50,4 +50,6 @@
     <string name="movie_not_found">Movie not found</string>
     <string name="press_back_again">Tekan sekali lagi untuk keluar</string>
     <string name="power_by">Power by</string>
+    <string name="favorite">Favorite</string>
+    <string name="discover_your_favorite_movie">Discover your favorite movie</string>
 </resources>
